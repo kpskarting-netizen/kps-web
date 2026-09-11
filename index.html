@@ -321,6 +321,8 @@ table.timing td.pts{font-family:var(--font-mono);text-align:right;font-weight:70
   display:flex;align-items:center;justify-content:center;
   font-family:var(--font-mono);font-size:.7rem;color:#9a988f;text-align:center;padding:8px;
 }
+.logo-slot.is-real{border-style:solid;border-color:var(--paper-2);padding:12px;}
+.logo-slot.is-real img{max-width:100%;max-height:100%;object-fit:contain;}
 
 /* ============ SOCIAL ============ */
 .social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
@@ -379,11 +381,13 @@ footer a:hover{color:var(--white);}
 <header class="site">
   <div class="nav">
     <a href="#home" class="brand">
+      <span id="headerLogoSlot">
       <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <rect width="100" height="100" fill="none"/>
         <polygon points="20,15 85,15 60,50 85,85 20,85" fill="none" stroke="var(--chrome)" stroke-width="4"/>
         <text x="50" y="58" font-family="Rajdhani" font-weight="700" font-size="34" fill="var(--chrome)" text-anchor="middle">K</text>
       </svg>
+      </span>
       <span class="brand-text">KPS<span>Karting Provincial Santafesino</span></span>
     </a>
     <nav class="links" id="navLinks">
@@ -485,7 +489,7 @@ footer a:hover{color:var(--white);}
       <h2>Una categoría para cada etapa del piloto.</h2>
       <p>Desde el primer contacto con el karting hasta la máxima potencia nacional. Confirmá tu categoría al momento de inscribirte.</p>
     </div>
-    <div class="cat-list">
+    <div class="cat-list" id="categoryList">
       <div class="cat-row">
         <span class="idx">01</span>
         <div><h4>Escuelita Light</h4><p class="desc">Iniciación para los pilotos más jóvenes, motor de baja cilindrada y foco en aprendizaje.</p></div>
@@ -539,7 +543,7 @@ footer a:hover{color:var(--white);}
       <h2>Nueve fechas de fase regular.</h2>
       <p>KPS tiene periodicidad mensual: nueve fechas de competencia, con definición de copas tras la sexta.</p>
     </div>
-    <div class="timeline">
+    <div class="timeline" id="calendarTimeline">
       <div class="tl-item done"><div class="tl-dot"></div>
         <div class="tl-head"><span class="fecha-n">1ª FECHA</span><h4>25 y 26 de abril</h4><span class="status-pill done">Corrida</span></div>
         <p>Apertura de temporada.</p>
@@ -637,21 +641,21 @@ footer a:hover{color:var(--white);}
     <div>
       <span class="kicker" style="color:#FFD9DC;">Rifa solidaria KPS</span>
       <h2>Tu número apoya directo al desarrollo del karting santafesino.</h2>
-      <p>Lo recaudado se destina a mejoras de seguridad en pista y al fondo de premios de las categorías formativas. El sorteo se realiza en vivo, en la 7ª fecha.</p>
+      <p>Lo recaudado se destina a mejoras de seguridad en pista y al fondo de premios de las categorías formativas. Elegí tu número, pagá por transferencia y subí tu comprobante — todo desde la misma página.</p>
       <div class="hero-actions">
-        <a id="raffleBuyBtnMain" href="https://mpago.la/TU-LINK-RIFA" target="_blank" rel="noopener" class="btn btn-red">Comprar números de rifa</a>
+        <a href="rifa.html" class="btn btn-red">Elegir mi número de rifa</a>
         <a href="#redes" class="btn btn-outline">Ver el sorteo en vivo</a>
       </div>
     </div>
-    <div class="raffle-card">
-      <span class="tname mono" style="color:#FFD9DC;">NÚMERO DE RIFA</span>
-      <div class="price" id="rafflePrice">$5.000 <span>c/u</span></div>
-      <ul id="raffleBenefits">
-        <li>Premio mayor: casco + indumentaria oficial de piloto</li>
-        <li>2º premio: abono de temporada 2027</li>
-        <li>3º premio: merchandising oficial KPS</li>
+    <div class="raffle-card" id="raffleCard">
+      <span class="tname mono" style="color:#FFD9DC;">GRAN RIFA KPS</span>
+      <div class="price">$10.000 <span>por número</span></div>
+      <ul>
+        <li>Tres sorteos: octubre, noviembre y diciembre</li>
+        <li>Números del 0000 al 9999</li>
+        <li>El sorteo final juega con todos los números vendidos</li>
       </ul>
-      <a id="raffleBuyBtnCard" href="https://mpago.la/TU-LINK-RIFA" target="_blank" rel="noopener" class="btn btn-outline btn-block">Ver todos los premios</a>
+      <a href="rifa.html" class="btn btn-outline btn-block">Ver números disponibles</a>
     </div>
   </div>
 </section>
@@ -716,7 +720,7 @@ footer a:hover{color:var(--white);}
           method="POST"
           onsubmit="return handleForm(event,'inscripcionConfirm','¡Listo! Recibimos tu inscripción, te contactamos por WhatsApp o e-mail para coordinar la verificación técnica.')">
       <input type="hidden" name="_subject" value="Nueva inscripción — KPS">
-      <div class="form-grid">
+      <div class="form-grid" id="inscripcionFields">
         <div class="field"><label for="i-nombre">Nombre y apellido</label><input id="i-nombre" name="Nombre y apellido" required></div>
         <div class="field"><label for="i-dni">DNI</label><input id="i-dni" name="DNI" required></div>
         <div class="field"><label for="i-nacimiento">Fecha de nacimiento</label><input type="date" id="i-nacimiento" name="Fecha de nacimiento" required></div>
@@ -784,7 +788,7 @@ footer a:hover{color:var(--white);}
       <span class="kicker">Sponsor oficial de temporada</span>
       <h3 style="font-size:1.5rem;margin-top:6px;">Sponsor Oficial KPS 2026 — $1.400.000</h3>
       <p style="color:var(--ink-soft);margin-top:10px;max-width:60ch;margin-left:auto;margin-right:auto;">Incluye Sponsor Bandera, premiación en todas las fechas (trofeo a la terna ganadora por categoría) y logo institucional durante toda la temporada.</p>
-      <div class="logo-row">
+      <div class="logo-row" id="sponsorLogoRow">
         <div class="logo-slot">Espacio para logo de sponsor</div>
         <div class="logo-slot">Espacio para logo de sponsor</div>
         <div class="logo-slot">Espacio para logo de sponsor</div>
@@ -850,7 +854,7 @@ footer a:hover{color:var(--white);}
     <div class="foot-grid">
       <div>
         <div class="foot-brand">
-          <svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><polygon points="20,15 85,15 60,50 85,85 20,85" fill="none" stroke="#E7E9EC" stroke-width="4"/><text x="50" y="58" font-family="Rajdhani" font-weight="700" font-size="34" fill="#E7E9EC" text-anchor="middle">K</text></svg>
+          <span id="footerLogoSlot"><svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><polygon points="20,15 85,15 60,50 85,85 20,85" fill="none" stroke="#E7E9EC" stroke-width="4"/><text x="50" y="58" font-family="Rajdhani" font-weight="700" font-size="34" fill="#E7E9EC" text-anchor="middle">K</text></svg></span>
           <span>KPS</span>
         </div>
         <p>Karting Provincial Santafesino. Competencia oficial de karting en asfalto — Santa Fe, Argentina.</p>
@@ -901,7 +905,7 @@ footer a:hover{color:var(--white);}
  * Mientras esa URL no esté configurada, el sitio sigue mostrando el contenido de ejemplo
  * que ya está escrito más abajo en el HTML — nunca se rompe ni queda vacío.
  */
-const KPS_SHEET_CSV_URL = 'PEGA_AQUI_LA_URL_CSV_DE_TU_GOOGLE_SHEET';
+const KPS_SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?output=csv';
 
 function kpsEsc(str){
   const d = document.createElement('div');
@@ -933,27 +937,219 @@ async function kpsLoadCatalog(){
     const rows = parsed.data.filter(r => String(r.activo || '').trim().toUpperCase() === 'SI');
 
     const entradas = rows.filter(r => String(r.tipo || '').trim().toLowerCase() === 'entrada');
-    const rifas = rows.filter(r => String(r.tipo || '').trim().toLowerCase() === 'rifa');
 
     if(entradas.length){
       const grid = document.getElementById('ticketGrid');
       grid.innerHTML = entradas.map((r, i) => kpsTicketCardHtml(r, i === 1)).join('');
-    }
-    if(rifas.length){
-      const r = rifas[0];
-      const detalleLis = (r.detalle || '').split('|').filter(Boolean)
-        .map(d => `<li>${kpsEsc(d.trim())}</li>`).join('');
-      document.getElementById('rafflePrice').innerHTML = `${kpsEsc(r.precio)} <span>c/u</span>`;
-      document.getElementById('raffleBenefits').innerHTML = detalleLis;
-      const link = kpsEsc(r.link_pago || '#');
-      document.getElementById('raffleBuyBtnMain').href = link;
-      document.getElementById('raffleBuyBtnCard').href = link;
     }
   }catch(err){
     console.error('KPS: no se pudo cargar el catálogo desde Google Sheets, se muestra el contenido de ejemplo.', err);
   }
 }
 document.addEventListener('DOMContentLoaded', kpsLoadCatalog);
+
+/**
+ * ============ SPONSORS Y LOGO DEL ENCABEZADO ============
+ * Misma lógica que el catálogo de entradas: dos pestañas más en la MISMA
+ * planilla de Google (o una planilla aparte, como prefieras), publicadas
+ * cada una como su propio CSV.
+ *
+ * Pestaña "sponsors": columnas  nombre | logo_url | link | activo
+ * Pestaña "config":   columnas  clave | valor
+ *   Filas posibles:
+ *     header_logo -> URL de imagen del logo de KPS (encabezado y pie)
+ *   (el alias de Mercado Pago y el comprobante de la rifa ahora se manejan
+ *   directamente en rifa.html, conectado a Firebase)
+ */
+const KPS_SPONSORS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?gid=1215558030&single=true&output=csv';
+const KPS_CONFIG_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?gid=1247441229&single=true&output=csv';
+
+async function kpsLoadSponsors(){
+  if(!KPS_SPONSORS_CSV_URL || KPS_SPONSORS_CSV_URL.includes('PEGA_AQUI')) return;
+  try{
+    const res = await fetch(KPS_SPONSORS_CSV_URL);
+    if(!res.ok) throw new Error('No se pudo leer la planilla de sponsors');
+    const parsed = Papa.parse(await res.text(), { header: true, skipEmptyLines: true });
+    const sponsors = parsed.data.filter(r => String(r.activo || '').trim().toUpperCase() === 'SI' && r.logo_url);
+    if(!sponsors.length) return;
+    const row = document.getElementById('sponsorLogoRow');
+    row.innerHTML = sponsors.map(s => {
+      const img = `<img src="${kpsEsc(s.logo_url)}" alt="${kpsEsc(s.nombre || 'Sponsor de KPS')}">`;
+      const inner = s.link ? `<a href="${kpsEsc(s.link)}" target="_blank" rel="noopener">${img}</a>` : img;
+      return `<div class="logo-slot is-real">${inner}</div>`;
+    }).join('');
+  }catch(err){
+    console.error('KPS: no se pudieron cargar los sponsors desde Google Sheets.', err);
+  }
+}
+
+async function kpsLoadConfig(){
+  if(!KPS_CONFIG_CSV_URL || KPS_CONFIG_CSV_URL.includes('PEGA_AQUI')) return;
+  try{
+    const res = await fetch(KPS_CONFIG_CSV_URL);
+    if(!res.ok) throw new Error('No se pudo leer la planilla de configuración');
+    const parsed = Papa.parse(await res.text(), { header: true, skipEmptyLines: true });
+    const config = {};
+    parsed.data.forEach(r => { if(r.clave) config[String(r.clave).trim()] = r.valor; });
+    if(config.header_logo){
+      const logoHtml = `<img src="${kpsEsc(config.header_logo)}" alt="Logo de KPS" style="height:40px;width:auto;">`;
+      const headerSlot = document.getElementById('headerLogoSlot');
+      const footerSlot = document.getElementById('footerLogoSlot');
+      if(headerSlot) headerSlot.innerHTML = logoHtml;
+      if(footerSlot) footerSlot.innerHTML = `<img src="${kpsEsc(config.header_logo)}" alt="Logo de KPS" style="height:34px;width:auto;">`;
+    }
+  }catch(err){
+    console.error('KPS: no se pudo cargar la configuración desde Google Sheets.', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', kpsLoadSponsors);
+document.addEventListener('DOMContentLoaded', kpsLoadConfig);
+
+/**
+ * ============ CALENDARIO ============
+ * Pestaña "calendario": columnas  numero | fechas | estado | nota
+ * estado: escribí "Corrida", "Próxima", "A disputarse" o "A definir"
+ */
+const KPS_CALENDAR_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?gid=1107315949&single=true&output=csv';
+
+function kpsEstadoClase(estado){
+  const e = String(estado || '').trim().toLowerCase();
+  if(e.includes('corrida')) return 'done';
+  if(e.includes('próxima') || e.includes('proxima')) return 'next';
+  return 'tbd';
+}
+
+async function kpsLoadCalendar(){
+  if(!KPS_CALENDAR_CSV_URL || KPS_CALENDAR_CSV_URL.includes('PEGA_AQUI')) return;
+  try{
+    const res = await fetch(KPS_CALENDAR_CSV_URL);
+    if(!res.ok) throw new Error('No se pudo leer la planilla de calendario');
+    const parsed = Papa.parse(await res.text(), { header: true, skipEmptyLines: true });
+    const rows = parsed.data.filter(r => r.fechas);
+    if(!rows.length) return;
+    const html = rows.map(r => {
+      const cls = kpsEstadoClase(r.estado);
+      const nota = r.nota ? `<p>${kpsEsc(r.nota)}</p>` : '';
+      return `<div class="tl-item ${cls}"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">${kpsEsc(r.numero)}</span><h4>${kpsEsc(r.fechas)}</h4><span class="status-pill ${cls}">${kpsEsc(r.estado)}</span></div>
+        ${nota}
+      </div>`;
+    }).join('');
+    document.getElementById('calendarTimeline').innerHTML = html;
+  }catch(err){
+    console.error('KPS: no se pudo cargar el calendario desde Google Sheets.', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', kpsLoadCalendar);
+
+/**
+ * ============ CATEGORÍAS ============
+ * Pestaña "categorias": columnas  orden | nombre | descripcion | etiqueta
+ */
+const KPS_CATEGORIES_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?gid=1843181427&single=true&output=csv';
+
+async function kpsLoadCategories(){
+  if(!KPS_CATEGORIES_CSV_URL || KPS_CATEGORIES_CSV_URL.includes('PEGA_AQUI')) return;
+  try{
+    const res = await fetch(KPS_CATEGORIES_CSV_URL);
+    if(!res.ok) throw new Error('No se pudo leer la planilla de categorías');
+    const parsed = Papa.parse(await res.text(), { header: true, skipEmptyLines: true });
+    const rows = parsed.data.filter(r => r.nombre);
+    if(!rows.length) return;
+    const html = rows.map(r => `
+      <div class="cat-row">
+        <span class="idx">${kpsEsc(r.orden)}</span>
+        <div><h4>${kpsEsc(r.nombre)}</h4><p class="desc">${kpsEsc(r.descripcion)}</p></div>
+        <span class="cat-tag">${kpsEsc(r.etiqueta)}</span>
+      </div>`).join('');
+    document.getElementById('categoryList').innerHTML = html;
+  }catch(err){
+    console.error('KPS: no se pudieron cargar las categorías desde Google Sheets.', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', kpsLoadCategories);
+
+/**
+ * ============ PUNTUACIONES / RANKING ============
+ * Pestaña "puntuaciones": columnas  categoria | posicion | piloto | equipo | localidad | puntos
+ * Las pestañas de categoría en el sitio se generan solas según lo que escribas en "categoria".
+ */
+const KPS_STANDINGS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?gid=1392328054&single=true&output=csv';
+
+async function kpsLoadStandings(){
+  if(!KPS_STANDINGS_CSV_URL || KPS_STANDINGS_CSV_URL.includes('PEGA_AQUI')) return;
+  try{
+    const res = await fetch(KPS_STANDINGS_CSV_URL);
+    if(!res.ok) throw new Error('No se pudo leer la planilla de puntuaciones');
+    const parsed = Papa.parse(await res.text(), { header: true, skipEmptyLines: true });
+    const grouped = {};
+    parsed.data.forEach(r => {
+      if(!r.categoria || !r.piloto) return;
+      const cat = String(r.categoria).trim();
+      if(!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push([r.posicion, r.piloto, r.equipo, r.localidad, r.puntos]);
+    });
+    const cats = Object.keys(grouped);
+    if(!cats.length) return;
+    cats.forEach(cat => grouped[cat].sort((a, b) => parseInt(a[0] || '99') - parseInt(b[0] || '99')));
+    standings = grouped;
+    document.getElementById('boardTabs').innerHTML = cats.map((cat, i) =>
+      `<button class="${i === 0 ? 'active' : ''}" data-cat="${kpsEsc(cat)}">${kpsEsc(cat)}</button>`
+    ).join('');
+    renderBoard(cats[0]);
+  }catch(err){
+    console.error('KPS: no se pudieron cargar las puntuaciones desde Google Sheets.', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', kpsLoadStandings);
+
+/**
+ * ============ CAMPOS DEL FORMULARIO DE INSCRIPCIÓN ============
+ * Pestaña "inscripcion_campos": columnas  orden | etiqueta | tipo | opciones | requerido
+ * tipo: texto | numero | fecha | telefono | email | seleccion | parrafo
+ * opciones: solo para "seleccion", separadas por | (ej. Standard|Master|Cadete)
+ * requerido: SI o NO
+ */
+const KPS_INSCRIPCION_CAMPOS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?gid=924173536&single=true&output=csv';
+
+function kpsBuildInscripcionField(row, idx){
+  const id = 'campo-' + idx;
+  const tipo = String(row.tipo || 'texto').trim().toLowerCase();
+  const etiqueta = row.etiqueta || ('Campo ' + (idx + 1));
+  const required = String(row.requerido || '').trim().toUpperCase() === 'SI';
+  const req = required ? 'required' : '';
+  let inputHtml;
+  if(tipo === 'seleccion'){
+    const opts = (row.opciones || '').split('|').filter(Boolean)
+      .map(o => `<option>${kpsEsc(o.trim())}</option>`).join('');
+    inputHtml = `<select id="${id}" name="${kpsEsc(etiqueta)}" ${req}><option value="">Elegí una opción</option>${opts}</select>`;
+  } else if(tipo === 'parrafo'){
+    inputHtml = `<textarea id="${id}" name="${kpsEsc(etiqueta)}" ${req}></textarea>`;
+  } else {
+    const typeMap = { numero: 'number', fecha: 'date', telefono: 'tel', email: 'email' };
+    const htmlType = typeMap[tipo] || 'text';
+    inputHtml = `<input type="${htmlType}" id="${id}" name="${kpsEsc(etiqueta)}" ${req}>`;
+  }
+  const fullClass = tipo === 'parrafo' ? ' full' : '';
+  return `<div class="field${fullClass}"><label for="${id}">${kpsEsc(etiqueta)}</label>${inputHtml}</div>`;
+}
+
+async function kpsLoadInscripcionFields(){
+  if(!KPS_INSCRIPCION_CAMPOS_CSV_URL || KPS_INSCRIPCION_CAMPOS_CSV_URL.includes('PEGA_AQUI')) return;
+  try{
+    const res = await fetch(KPS_INSCRIPCION_CAMPOS_CSV_URL);
+    if(!res.ok) throw new Error('No se pudo leer la planilla de campos de inscripción');
+    const parsed = Papa.parse(await res.text(), { header: true, skipEmptyLines: true });
+    const rows = parsed.data.filter(r => r.etiqueta)
+      .sort((a, b) => parseInt(a.orden || '99') - parseInt(b.orden || '99'));
+    if(!rows.length) return;
+    document.getElementById('inscripcionFields').innerHTML =
+      rows.map((r, i) => kpsBuildInscripcionField(r, i)).join('');
+  }catch(err){
+    console.error('KPS: no se pudieron cargar los campos de inscripción desde Google Sheets.', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', kpsLoadInscripcionFields);
 
 // ---- menú móvil ----
 const burger = document.getElementById('burgerBtn');
@@ -983,7 +1179,7 @@ tickCountdown();
 setInterval(tickCountdown, 30000);
 
 // ---- tabla de puntuaciones ----
-const standings = {
+let standings = {
   elite: [
     ['1','Franco Belliboni','Rotax Team','Santa Fe','198'],
     ['2','Ignacio Weiss','KPS Racing','Rosario','187'],
