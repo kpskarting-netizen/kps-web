@@ -713,13 +713,9 @@ footer a:hover{color:var(--white);}
     <div class="section-head">
       <span class="kicker">Inscripción de pilotos</span>
       <h2>Sumate al campeonato 2026.</h2>
-      <p>Completá tus datos y los de tu equipo. Te contactamos para coordinar la verificación técnica antes de tu primera fecha.</p>
+      <p>Completá tus datos, pagá la inscripción por transferencia y subí la referencia del pago. Tu lugar queda <strong>sujeto a confirmación del organizador</strong> una vez que verifiquemos el pago.</p>
     </div>
-    <form class="form-shell" id="inscripcionForm"
-          action="https://formspree.io/f/TU_ID_DE_FORMSPREE"
-          method="POST"
-          onsubmit="return handleForm(event,'inscripcionConfirm','¡Listo! Recibimos tu inscripción, te contactamos por WhatsApp o e-mail para coordinar la verificación técnica.')">
-      <input type="hidden" name="_subject" value="Nueva inscripción — KPS">
+    <form class="form-shell" id="inscripcionForm">
       <div class="form-grid" id="inscripcionFields">
         <div class="field"><label for="i-nombre">Nombre y apellido</label><input id="i-nombre" name="Nombre y apellido" required></div>
         <div class="field"><label for="i-dni">DNI</label><input id="i-dni" name="DNI" required></div>
@@ -738,6 +734,21 @@ footer a:hover{color:var(--white);}
         <div class="field"><label for="i-mail">E-mail</label><input id="i-mail" name="E-mail" type="email" required></div>
         <div class="field full"><label for="i-obs">Observaciones</label><textarea id="i-obs" name="Observaciones" placeholder="Kart propio, número anterior de competencia, etc."></textarea></div>
       </div>
+
+      <div style="background:var(--asphalt);color:#fff;padding:22px 24px;margin:8px 0 22px;">
+        <span class="kicker" style="color:#ff8b93;">Cómo pagar la inscripción</span>
+        <p style="color:#C7C9CE;font-size:.9rem;margin-top:6px;">Transferí el monto de inscripción a este alias de Mercado Pago:</p>
+        <div class="mono" id="inscripcionAlias" style="font-size:1.3rem;font-weight:700;margin:10px 0;background:rgba(255,255,255,.1);padding:10px 14px;text-align:center;">Kps2026</div>
+        <div class="field" style="margin-top:16px;">
+          <label style="color:#C7C9CE;">Número de comprobante / referencia</label>
+          <input id="i-payref" placeholder="Ej: N° de operación 000123456" required>
+        </div>
+        <label style="display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:#C7C9CE;margin-top:10px;">
+          <input type="checkbox" id="i-payconfirm" style="margin-top:3px;" required>
+          Confirmo que ya realicé la transferencia por el monto de inscripción correspondiente.
+        </label>
+      </div>
+
       <button type="submit" class="btn btn-red">Enviar inscripción</button>
       <div class="confirm-box" id="inscripcionConfirm"></div>
       <p class="form-note">Al inscribirte aceptás el reglamento deportivo y técnico vigente de KPS.</p>
@@ -1309,39 +1320,62 @@ document.getElementById('boardTabs').addEventListener('click', e => {
 });
 renderBoard('elite');
 
-// ---- formulario de inscripción (envío real a Formspree) ----
-async function handleForm(ev, confirmId, message){
+// ---- alias de pago de inscripción (viene del panel de administrador si está configurado) ----
+async function kpsLoadInscripcionAlias(){
+  const site = await getKpsSiteContent();
+  const el = document.getElementById('inscripcionAlias');
+  if(el && site.alias_mp) el.textContent = site.alias_mp;
+}
+document.addEventListener('DOMContentLoaded', kpsLoadInscripcionAlias);
+
+// ---- formulario de inscripción (se guarda en Firebase, queda "pendiente" hasta que el organizador lo confirme) ----
+function kpsGenInscripcionId(){
+  return 'INSC-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+}
+
+document.getElementById('inscripcionForm')?.addEventListener('submit', async (ev) => {
   ev.preventDefault();
   const form = ev.target;
-  const box = document.getElementById(confirmId);
-  const errorMsg = 'Hubo un problema al enviar el formulario. Probá de nuevo o escribinos directo por WhatsApp.';
+  const box = document.getElementById('inscripcionConfirm');
+  const errorMsg = 'Hubo un problema al enviar la inscripción. Probá de nuevo o escribinos directo por WhatsApp.';
+  const submitBtn = form.querySelector('button[type="submit"]');
 
-  if(form.action.includes('TU_ID_DE_FORMSPREE')){
-    box.textContent = 'Formulario de demostración: falta reemplazar "TU_ID_DE_FORMSPREE" por el ID real de Formspree en el HTML.';
+  const payRef = document.getElementById('i-payref')?.value.trim();
+  const payConfirmed = document.getElementById('i-payconfirm')?.checked;
+  if(!payRef || !payConfirmed){
+    box.textContent = 'Completá el número de comprobante y confirmá que ya transferiste el pago.';
     box.classList.add('show');
-    return false;
+    return;
   }
+
+  const datos = {};
+  form.querySelectorAll('#inscripcionFields [name]').forEach(el => { datos[el.name] = el.value; });
+
+  const registro = {
+    id: kpsGenInscripcionId(),
+    datos,
+    payReference: payRef,
+    payConfirmed: true,
+    status: 'pendiente',
+    createdAt: Date.now()
+  };
 
   try{
-    const response = await fetch(form.action, {
-      method: 'POST',
-      body: new FormData(form),
-      headers: { 'Accept': 'application/json' }
-    });
-    if(response.ok){
-      box.textContent = message;
-      box.classList.add('show');
-      form.reset();
-    } else {
-      box.textContent = errorMsg;
-      box.classList.add('show');
-    }
-  } catch(err){
+    const db = getKpsDb();
+    if(!db) throw new Error('No se pudo conectar con la base de datos.');
+    submitBtn.disabled = true; submitBtn.textContent = 'Enviando…';
+    await db.collection('inscripciones').doc(registro.id).set(registro);
+    box.textContent = '¡Listo! Tu inscripción quedó registrada como pendiente. La confirmamos apenas verifiquemos el pago, y te contactamos por WhatsApp o e-mail.';
+    box.classList.add('show');
+    form.reset();
+  }catch(err){
+    console.error('KPS: no se pudo guardar la inscripción.', err);
     box.textContent = errorMsg;
     box.classList.add('show');
+  }finally{
+    submitBtn.disabled = false; submitBtn.textContent = 'Enviar inscripción';
   }
-  return false;
-}
+});
 </script>
 </body>
 </html>

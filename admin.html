@@ -91,6 +91,7 @@ const FIREBASE_CONFIG = {
 function defaultData(){
   return {
     header_logo: "",
+    alias_mp: "Kps2026",
     categorias: [
       {orden:"01", nombre:"Escuelita Light", descripcion:"Iniciación para los pilotos más jóvenes, motor de baja cilindrada y foco en aprendizaje.", etiqueta:"Infantil"},
       {orden:"02", nombre:"Cadete", descripcion:"Segundo escalón formativo, previo al salto a las categorías menores de competición.", etiqueta:"Infantil"},
@@ -209,11 +210,13 @@ function renderLogin(){
 /* ============ SHELL Y TABS ============ */
 const TABS = [
   {key:"logo", label:"Logo"},
+  {key:"pagos", label:"Pagos"},
   {key:"categorias", label:"Categorías"},
   {key:"calendario", label:"Calendario"},
   {key:"puntuaciones", label:"Puntuaciones"},
   {key:"sponsors", label:"Sponsors"},
-  {key:"inscripcion", label:"Inscripción"}
+  {key:"inscripcion", label:"Preguntas de inscripción"},
+  {key:"inscripciones_recibidas", label:"Inscripciones recibidas"}
 ];
 
 function renderBanner(){
@@ -235,7 +238,7 @@ function renderShell(inner){
     ${inner}
     <div class="save-bar">
       <a class="btn" href="index.html" target="_blank">Ver sitio</a>
-      <button class="btn btn-red" id="saveBtn" ${state.saving?"disabled":""}>${state.saving ? "Guardando…" : "Guardar cambios"}</button>
+      ${state.tab==="inscripciones_recibidas" ? "" : `<button class="btn btn-red" id="saveBtn" ${state.saving?"disabled":""}>${state.saving ? "Guardando…" : "Guardar cambios"}</button>`}
     </div>
   </div>`;
 }
@@ -250,6 +253,16 @@ function renderLogoTab(){
     <div class="logo-preview">${logo ? `<img src="${logo}" alt="Logo actual">` : `<span style="color:#999;font-size:.8rem;">Sin logo cargado</span>`}</div>
     <input type="file" accept="image/*" id="logoFile">
     ${logo ? `<button class="btn" id="clearLogo" style="margin-top:10px;">Quitar logo (usar el ícono genérico)</button>` : ""}
+  </div>`;
+}
+
+/* ============ TAB: PAGOS ============ */
+function renderPagosTab(){
+  return `
+  <div class="card">
+    <h2 class="section-title">Alias de Mercado Pago</h2>
+    <p class="section-sub">Este es el alias que se muestra en el formulario de inscripción de pilotos (y en cualquier otro lugar del sitio que pida transferir el pago).</p>
+    <div class="field"><label>Alias</label><input data-f-top="alias_mp" value="${esc(state.data.alias_mp)}"></div>
   </div>`;
 }
 
@@ -386,14 +399,72 @@ function renderInscripcionTab(){
     <button class="add-btn" data-add="inscripcion_campos">+ Agregar pregunta</button>`;
 }
 
+/* ============ TAB: INSCRIPCIONES RECIBIDAS ============ */
+const inscState = { loaded:false, loading:false, items:[] };
+
+async function loadInscripciones(force){
+  if(inscState.loaded && !force) return;
+  inscState.loading = true; render();
+  try{
+    const snap = await getDb().collection("inscripciones").orderBy("createdAt", "desc").get();
+    inscState.items = snap.docs.map(d => d.data());
+    inscState.loaded = true;
+  }catch(err){
+    showBanner("error", "No se pudieron cargar las inscripciones: " + err.message);
+  }
+  inscState.loading = false; render();
+}
+
+async function setInscripcionStatus(id, status){
+  try{
+    await getDb().collection("inscripciones").doc(id).update({ status });
+    await loadInscripciones(true);
+  }catch(err){
+    showBanner("error", "No se pudo actualizar: " + err.message);
+  }
+}
+
+function renderInscripcionesRecibidasTab(){
+  if(inscState.loading){
+    return `<p class="section-sub">Cargando inscripciones…</p>`;
+  }
+  const rows = inscState.items.map(o => {
+    const datosHtml = Object.entries(o.datos || {}).map(([k,v]) => `<div><span style="color:#9EA1A8;">${esc(k)}:</span> ${esc(v)}</div>`).join("");
+    const fecha = o.createdAt ? new Date(o.createdAt).toLocaleString("es-AR") : "";
+    const badgeColor = o.status==="aprobado" ? "#3fae5b" : o.status==="rechazado" ? "var(--red)" : "#f0a825";
+    const actions = o.status==="pendiente"
+      ? `<button class="btn" style="border-color:#3fae5b;color:#3fae5b;margin-right:8px;" data-approve-insc="${o.id}">Aprobar</button>
+         <button class="remove-btn" data-reject-insc="${o.id}">Anular</button>`
+      : `<button class="btn" data-approve-insc="${o.id}" style="opacity:.5;" disabled>${o.status==="aprobado"?"Aprobada":"Anulada"}</button>`;
+    return `
+    <div class="card">
+      <div class="card-head">
+        <span>${esc(fecha)}</span>
+        <span class="mono" style="color:${badgeColor};font-weight:700;">${esc((o.status||"").toUpperCase())}</span>
+      </div>
+      <div style="font-size:.9rem;margin-bottom:10px;">${datosHtml}</div>
+      <div style="font-size:.85rem;color:#9EA1A8;margin-bottom:12px;">Comprobante: <span class="mono">${esc(o.payReference)}</span></div>
+      ${actions}
+    </div>`;
+  }).join("");
+
+  return `
+    <h2 class="section-title">Inscripciones recibidas</h2>
+    <p class="section-sub">Revisá el comprobante de cada una contra tus movimientos de Mercado Pago antes de aprobar.</p>
+    <button class="btn" id="refreshInsc" style="margin-bottom:16px;">↻ Actualizar</button>
+    ${rows || '<p class="section-sub">Todavía no llegó ninguna inscripción.</p>'}`;
+}
+
 /* ============ RENDER PRINCIPAL ============ */
 function renderTabContent(){
   if(state.tab==="logo") return renderLogoTab();
+  if(state.tab==="pagos") return renderPagosTab();
   if(state.tab==="categorias") return renderCategoriasTab();
   if(state.tab==="calendario") return renderCalendarioTab();
   if(state.tab==="puntuaciones") return renderPuntuacionesTab();
   if(state.tab==="sponsors") return renderSponsorsTab();
   if(state.tab==="inscripcion") return renderInscripcionTab();
+  if(state.tab==="inscripciones_recibidas") return renderInscripcionesRecibidasTab();
   return "";
 }
 
@@ -435,7 +506,22 @@ function attachShellEvents(){
   document.getElementById("logoutBtn")?.addEventListener("click", () => { state.loggedIn = false; state.passInput = ""; render(); });
   document.getElementById("saveBtn")?.addEventListener("click", saveContent);
   document.querySelectorAll("[data-tab]").forEach(btn => {
-    btn.addEventListener("click", () => { state.tab = btn.dataset.tab; render(); });
+    btn.addEventListener("click", () => {
+      state.tab = btn.dataset.tab;
+      render();
+      if(state.tab === "inscripciones_recibidas") loadInscripciones(false);
+    });
+  });
+  document.getElementById("refreshInsc")?.addEventListener("click", () => loadInscripciones(true));
+  document.querySelectorAll("[data-approve-insc]").forEach(btn => {
+    btn.addEventListener("click", () => setInscripcionStatus(btn.dataset.approveInsc, "aprobado"));
+  });
+  document.querySelectorAll("[data-reject-insc]").forEach(btn => {
+    btn.addEventListener("click", () => setInscripcionStatus(btn.dataset.rejectInsc, "rechazado"));
+  });
+
+  document.querySelectorAll("[data-f-top]").forEach(el => {
+    el.addEventListener("input", () => { state.data[el.dataset.fTop] = el.value; });
   });
 
   document.querySelectorAll("[data-f]").forEach(el => {
