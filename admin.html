@@ -92,6 +92,19 @@ function defaultData(){
   return {
     header_logo: "",
     alias_mp: "Kps2026",
+    nav_brand_short: "KPS",
+    nav_brand_long: "Karting Provincial Santafesino",
+    footer_about: "Karting Provincial Santafesino. Competencia oficial de karting en asfalto — Santa Fe, Argentina.",
+    hero_eyebrow: "TEMPORADA 2026 · FASE REGULAR EN CURSO",
+    hero_title: "Karting de <em>asfalto</em>,<br>hecho en Santa Fe.",
+    hero_lead: "Nueve fechas, un ambiente familiar y la transparencia técnica como bandera. Desde Escuelita Light hasta 125cc 2T Internacional — pilotos de Santa Fe, la región centro y Córdoba compitiendo en el mismo circuito.",
+    reglamento_url: "",
+    social_instagram: "https://instagram.com/kartingprovincialsantafesino",
+    social_facebook: "https://facebook.com/KPSoficial",
+    social_x: "https://x.com/KPSoficial",
+    social_youtube: "https://www.youtube.com/@KPSOficial",
+    phone1: "+54 9 3425 24-6790",
+    phone2: "+54 9 3425 06-0049",
     categorias: [
       {orden:"01", nombre:"Escuelita Light", descripcion:"Iniciación para los pilotos más jóvenes, motor de baja cilindrada y foco en aprendizaje.", etiqueta:"Infantil"},
       {orden:"02", nombre:"Cadete", descripcion:"Segundo escalón formativo, previo al salto a las categorías menores de competición.", etiqueta:"Infantil"},
@@ -210,6 +223,9 @@ function renderLogin(){
 /* ============ SHELL Y TABS ============ */
 const TABS = [
   {key:"logo", label:"Logo"},
+  {key:"general", label:"General"},
+  {key:"redes", label:"Redes y contacto"},
+  {key:"reglamento", label:"Reglamento"},
   {key:"pagos", label:"Pagos"},
   {key:"categorias", label:"Categorías"},
   {key:"calendario", label:"Calendario"},
@@ -455,9 +471,73 @@ function renderInscripcionesRecibidasTab(){
     ${rows || '<p class="section-sub">Todavía no llegó ninguna inscripción.</p>'}`;
 }
 
+/* ============ TAB: GENERAL ============ */
+function renderGeneralTab(){
+  const d = state.data;
+  return `
+  <div class="card">
+    <h2 class="section-title">Marca (encabezado y pie de página)</h2>
+    <div class="row2">
+      <div class="field"><label>Nombre corto (ej. KPS)</label><input data-f-top="nav_brand_short" value="${esc(d.nav_brand_short)}"></div>
+      <div class="field"><label>Nombre largo</label><input data-f-top="nav_brand_long" value="${esc(d.nav_brand_long)}"></div>
+    </div>
+    <div class="field"><label>Descripción corta del pie de página</label><textarea data-f-top="footer_about">${esc(d.footer_about)}</textarea></div>
+  </div>
+  <div class="card">
+    <h2 class="section-title">Portada (hero)</h2>
+    <div class="field"><label>Texto pequeño de arriba</label><input data-f-top="hero_eyebrow" value="${esc(d.hero_eyebrow)}"></div>
+    <div class="field"><label>Título grande (podés usar &lt;em&gt; y &lt;br&gt; para cortar línea y resaltar una palabra)</label><textarea data-f-top="hero_title">${esc(d.hero_title)}</textarea></div>
+    <div class="field"><label>Texto debajo del título</label><textarea data-f-top="hero_lead">${esc(d.hero_lead)}</textarea></div>
+  </div>`;
+}
+
+/* ============ TAB: REDES Y CONTACTO ============ */
+function renderRedesTab(){
+  const d = state.data;
+  return `
+  <div class="card">
+    <h2 class="section-title">Redes sociales</h2>
+    <p class="section-sub">Pegá el link completo de cada red (con https://).</p>
+    <div class="row2">
+      <div class="field"><label>Instagram</label><input data-f-top="social_instagram" value="${esc(d.social_instagram)}"></div>
+      <div class="field"><label>Facebook</label><input data-f-top="social_facebook" value="${esc(d.social_facebook)}"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>X (Twitter)</label><input data-f-top="social_x" value="${esc(d.social_x)}"></div>
+      <div class="field"><label>YouTube</label><input data-f-top="social_youtube" value="${esc(d.social_youtube)}"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2 class="section-title">Teléfonos de contacto</h2>
+    <div class="row2">
+      <div class="field"><label>Teléfono 1</label><input data-f-top="phone1" value="${esc(d.phone1)}"></div>
+      <div class="field"><label>Teléfono 2</label><input data-f-top="phone2" value="${esc(d.phone2)}"></div>
+    </div>
+  </div>`;
+}
+
+/* ============ TAB: REGLAMENTO ============ */
+function renderReglamentoTab(){
+  const url = state.data.reglamento_url;
+  return `
+  <div class="card">
+    <h2 class="section-title">Reglamento (PDF)</h2>
+    <p class="section-sub">
+      Subí el PDF a Google Drive → clic derecho → Compartir → "Cualquier usuario con el enlace" → copiá el link.
+      Tomá el código que está entre <span class="mono">/d/</span> y <span class="mono">/view</span>, y armá esta URL:
+      <br><span class="mono">https://drive.google.com/uc?export=download&amp;id=TU_CODIGO</span>
+    </p>
+    <div class="field"><label>Link de descarga del reglamento</label><input data-f-top="reglamento_url" value="${esc(url)}" placeholder="https://drive.google.com/uc?export=download&id=..."></div>
+    ${url ? `<a class="btn" href="${url}" target="_blank" rel="noopener">Probar el link actual</a>` : ""}
+  </div>`;
+}
+
 /* ============ RENDER PRINCIPAL ============ */
 function renderTabContent(){
   if(state.tab==="logo") return renderLogoTab();
+  if(state.tab==="general") return renderGeneralTab();
+  if(state.tab==="redes") return renderRedesTab();
+  if(state.tab==="reglamento") return renderReglamentoTab();
   if(state.tab==="pagos") return renderPagosTab();
   if(state.tab==="categorias") return renderCategoriasTab();
   if(state.tab==="calendario") return renderCalendarioTab();
