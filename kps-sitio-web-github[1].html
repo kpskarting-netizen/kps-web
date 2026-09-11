@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KPS · Karting Provincial Santafesino</title>
+<meta name="description" content="Karting Provincial Santafesino — campeonato oficial de karting en asfalto. Puntuaciones, calendario, categorías, inscripciones, entradas y rifa solidaria.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --asphalt:#15171C;
+  --asphalt-2:#1D2026;
+  --asphalt-3:#262A32;
+  --line:#33373f;
+  --red:#C81E2C;
+  --red-deep:#8F1420;
+  --blue:#1C5FA8;
+  --blue-deep:#123E70;
+  --chrome:#E7E9EC;
+  --paper:#F3F2EE;
+  --paper-2:#EAE8E1;
+  --ink:#15171C;
+  --ink-soft:#4B4E55;
+  --white:#FFFFFF;
+  --font-display:'Rajdhani',sans-serif;
+  --font-body:'Work Sans',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --maxw:1180px;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:var(--font-body);
+  color:var(--ink);
+  background:var(--paper);
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;}
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  font-weight:700;
+  margin:0;
+  letter-spacing:.2px;
+  line-height:1.05;
+}
+p{line-height:1.65;margin:0;}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+.mono{font-family:var(--font-mono);}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}
+}
+
+/* ============ BUTTONS ============ */
+.btn{
+  display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--font-display);font-weight:700;font-size:1.02rem;
+  padding:14px 26px;
+  border:2px solid transparent;
+  cursor:pointer;
+  text-decoration:none;
+  transition:transform .15s ease, background .15s ease, border-color .15s ease;
+  letter-spacing:.3px;
+}
+.btn:hover{transform:translateY(-2px);}
+.btn-red{background:var(--red);color:var(--white);}
+.btn-red:hover{background:var(--red-deep);}
+.btn-blue{background:var(--blue);color:var(--white);}
+.btn-blue:hover{background:var(--blue-deep);}
+.btn-outline{background:transparent;border-color:var(--chrome);color:var(--chrome);}
+.btn-outline:hover{background:var(--chrome);color:var(--asphalt);}
+.btn-outline-dark{background:transparent;border-color:var(--asphalt);color:var(--asphalt);}
+.btn-outline-dark:hover{background:var(--asphalt);color:var(--white);}
+.btn-block{width:100%;justify-content:center;}
+
+/* ============ NAV ============ */
+header.site{
+  position:sticky;top:0;z-index:100;
+  background:rgba(21,23,28,.96);
+  border-bottom:3px solid var(--red);
+  backdrop-filter:blur(6px);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;max-width:var(--maxw);margin:0 auto;gap:20px;}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--white);}
+.brand-mark{width:40px;height:40px;flex:none;}
+.brand-text{font-family:var(--font-display);font-weight:700;font-size:1.25rem;color:var(--white);line-height:1;}
+.brand-text span{display:block;font-family:var(--font-body);font-weight:500;font-size:.62rem;color:var(--chrome);letter-spacing:.5px;margin-top:3px;}
+nav.links{display:flex;gap:22px;align-items:center;}
+nav.links a{color:var(--chrome);text-decoration:none;font-weight:600;font-size:.92rem;padding:6px 2px;border-bottom:2px solid transparent;}
+nav.links a:hover{border-bottom-color:var(--red);color:var(--white);}
+.nav-cta{display:flex;gap:10px;}
+.nav-cta .btn{padding:10px 18px;font-size:.88rem;}
+.burger{display:none;background:none;border:2px solid var(--chrome);color:var(--white);width:42px;height:42px;font-size:1.2rem;cursor:pointer;}
+@media (max-width:980px){
+  nav.links{position:fixed;top:65px;left:0;right:0;background:var(--asphalt);flex-direction:column;align-items:flex-start;padding:18px 24px;border-bottom:3px solid var(--red);display:none;gap:14px;}
+  nav.links.open{display:flex;}
+  .nav-cta{display:none;}
+  .burger{display:block;}
+}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;
+  background:var(--asphalt);
+  color:var(--white);
+  overflow:hidden;
+  padding:0 0 0 0;
+}
+.hero-flag{
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 26px, transparent 26px 52px);
+  opacity:.5;
+}
+.hero-diag{
+  position:absolute;top:0;right:-10%;bottom:0;width:60%;
+  background:linear-gradient(115deg, transparent 0%, transparent 38%, var(--red) 38%, var(--red-deep) 60%, var(--blue) 60%, var(--blue-deep) 100%);
+  clip-path:polygon(35% 0, 100% 0, 100% 100%, 5% 100%);
+  opacity:.92;
+}
+.hero-inner{
+  position:relative;z-index:2;
+  max-width:var(--maxw);margin:0 auto;
+  padding:88px 24px 70px;
+  display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:end;
+}
+.hero-eyebrow{font-family:var(--font-mono);font-size:.82rem;color:#ff8b93;letter-spacing:1px;margin-bottom:16px;display:block;}
+.hero h1{font-size:clamp(2.6rem,5.4vw,4.4rem);color:var(--white);}
+.hero h1 em{font-style:normal;color:var(--chrome);}
+.hero p.lead{margin-top:18px;max-width:52ch;color:#D7D9DD;font-size:1.08rem;}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;}
+.hero-panel{
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.18);
+  padding:26px;
+}
+.hero-panel h3{color:var(--white);font-size:1rem;text-transform:none;margin-bottom:4px;}
+.countdown{display:flex;gap:14px;margin-top:16px;}
+.countdown div{text-align:center;flex:1;}
+.countdown .num{font-family:var(--font-mono);font-size:1.9rem;font-weight:700;color:var(--white);display:block;}
+.countdown .lbl{font-size:.68rem;color:#B7BAC0;text-transform:uppercase;letter-spacing:.8px;}
+.hero-panel .date-line{margin-top:14px;font-size:.9rem;color:#C7C9CE;padding-top:14px;border-top:1px solid rgba(255,255,255,.15);}
+
+/* ============ TICKER ============ */
+.ticker{
+  background:var(--red);
+  color:var(--white);
+  overflow:hidden;
+  white-space:nowrap;
+  border-bottom:1px solid rgba(0,0,0,.15);
+}
+.ticker-track{display:inline-flex;animation:scroll 32s linear infinite;padding:10px 0;}
+.ticker-track span{font-family:var(--font-mono);font-size:.82rem;padding:0 28px;letter-spacing:.4px;}
+.ticker-track span::after{content:"◆";margin-left:28px;opacity:.6;}
+@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ============ SECTION SHELL ============ */
+section{padding:86px 0;}
+.section-head{max-width:640px;margin-bottom:46px;}
+.kicker{font-family:var(--font-mono);font-size:.78rem;color:var(--red);letter-spacing:.6px;display:block;margin-bottom:10px;}
+.section-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);color:var(--ink);}
+.section-head p{margin-top:14px;color:var(--ink-soft);font-size:1.05rem;max-width:60ch;}
+.dark-section{background:var(--asphalt);color:var(--white);}
+.dark-section .kicker{color:#ff8b93;}
+.dark-section .section-head h2{color:var(--white);}
+.dark-section .section-head p{color:#C7C9CE;}
+
+/* ============ SOBRE KPS ============ */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+.about-copy p + p{margin-top:16px;}
+.about-copy{font-size:1.06rem;color:var(--ink-soft);}
+.values-list{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px;}
+.values-list li{
+  font-family:var(--font-mono);font-size:.8rem;
+  border:1.5px solid var(--asphalt);padding:7px 14px;
+  color:var(--ink);
+}
+.team-panel{background:var(--white);border:1px solid var(--paper-2);}
+.team-panel-head{background:var(--asphalt);color:var(--white);padding:18px 24px;}
+.team-panel-head span{font-family:var(--font-mono);font-size:.75rem;color:#ff8b93;}
+.team-panel-head h3{font-size:1.3rem;margin-top:4px;color:var(--white);}
+.team-row{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--paper-2);}
+.team-row:last-child{border-bottom:none;}
+.team-row .name{font-family:var(--font-display);font-weight:700;font-size:1.05rem;}
+.team-row .role{font-size:.82rem;color:var(--ink-soft);text-align:right;}
+
+/* ============ CATEGORIES ============ */
+.cat-list{border-top:1px solid var(--line-light,#D9D7CF);}
+.cat-row{
+  display:grid;grid-template-columns:64px 1fr auto;gap:20px;align-items:center;
+  padding:20px 0;border-bottom:1px solid #D9D7CF;
+}
+.cat-row .idx{font-family:var(--font-mono);font-size:.85rem;color:var(--red);}
+.cat-row h4{font-size:1.2rem;}
+.cat-row .desc{color:var(--ink-soft);font-size:.92rem;margin-top:4px;}
+.cat-tag{font-family:var(--font-mono);font-size:.72rem;border:1.5px solid var(--blue);color:var(--blue);padding:5px 12px;white-space:nowrap;}
+
+/* ============ CALENDAR ============ */
+.timeline{position:relative;padding-left:32px;border-left:2px solid var(--asphalt-3);}
+.tl-item{position:relative;padding-bottom:34px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-dot{position:absolute;left:-41px;top:2px;width:18px;height:18px;background:var(--asphalt);border:3px solid var(--chrome);}
+.tl-item.done .tl-dot{background:var(--blue);border-color:var(--blue);}
+.tl-item.next .tl-dot{background:var(--red);border-color:var(--red);box-shadow:0 0 0 5px rgba(200,30,44,.25);}
+.tl-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+.tl-head .fecha-n{font-family:var(--font-mono);color:#ff8b93;font-size:.85rem;}
+.tl-head h4{color:var(--white);font-size:1.15rem;}
+.tl-item p{color:#B7BAC0;margin-top:4px;font-size:.92rem;}
+.status-pill{font-family:var(--font-mono);font-size:.68rem;padding:3px 10px;letter-spacing:.4px;}
+.status-pill.done{background:var(--blue);color:var(--white);}
+.status-pill.next{background:var(--red);color:var(--white);}
+.status-pill.tbd{border:1px solid #666;color:#999;}
+
+/* ============ STANDINGS ============ */
+.board{background:var(--asphalt-2);border:1px solid var(--line);}
+.board-tabs{display:flex;flex-wrap:wrap;border-bottom:1px solid var(--line);}
+.board-tabs button{
+  font-family:var(--font-display);font-weight:600;font-size:.92rem;
+  background:none;border:none;color:#9EA1A8;padding:16px 20px;cursor:pointer;border-bottom:3px solid transparent;
+}
+.board-tabs button.active{color:var(--white);border-bottom-color:var(--red);}
+table.timing{width:100%;border-collapse:collapse;}
+table.timing th{
+  text-align:left;font-family:var(--font-mono);font-size:.7rem;color:#9EA1A8;
+  text-transform:uppercase;letter-spacing:.6px;padding:14px 20px;border-bottom:1px solid var(--line);
+}
+table.timing td{padding:13px 20px;color:var(--chrome);font-size:.94rem;border-bottom:1px solid var(--line);}
+table.timing tr:last-child td{border-bottom:none;}
+table.timing td.pos{font-family:var(--font-mono);font-weight:700;color:var(--white);}
+table.timing tr.p1 td.pos{color:#ffd25c;}
+table.timing tr.p2 td.pos{color:var(--chrome);}
+table.timing tr.p3 td.pos{color:#cd8a4f;}
+table.timing td.pts{font-family:var(--font-mono);text-align:right;font-weight:700;color:var(--white);}
+.board-foot{padding:16px 20px;font-size:.82rem;color:#9EA1A8;border-top:1px solid var(--line);}
+
+/* ============ REGLAMENTO / PREMIOS ============ */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
+.rule-card{background:var(--white);border:1px solid var(--paper-2);padding:30px;}
+.rule-card h3{font-size:1.35rem;margin-bottom:14px;}
+.rule-card ul{margin:0;padding-left:20px;color:var(--ink-soft);}
+.rule-card li{margin-bottom:8px;line-height:1.5;}
+.rule-card .btn{margin-top:22px;}
+.prize-tiers{display:flex;flex-direction:column;gap:0;}
+.prize-row{display:flex;justify-content:space-between;align-items:center;padding:18px 0;border-bottom:1px solid #D9D7CF;}
+.prize-row:first-child{border-top:1px solid #D9D7CF;}
+.prize-row .place{font-family:var(--font-mono);font-size:.85rem;color:var(--red);width:70px;flex:none;}
+.prize-row .what{flex:1;font-size:.98rem;}
+
+/* ============ RAFFLE ============ */
+.raffle{
+  background:linear-gradient(100deg,var(--blue-deep) 0%,var(--blue) 45%, var(--red-deep) 100%);
+  color:var(--white);
+  position:relative;overflow:hidden;
+}
+.raffle::before{
+  content:"";position:absolute;inset:0;
+  background-image:repeating-linear-gradient(-45deg,rgba(0,0,0,.12) 0 20px, transparent 20px 40px);
+}
+.raffle-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;}
+.raffle h2{font-size:clamp(1.9rem,3.6vw,2.7rem);color:var(--white);}
+.raffle p{color:#EAF0F8;margin-top:14px;font-size:1.05rem;max-width:52ch;}
+.raffle-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);padding:28px;}
+.raffle-card .price{font-family:var(--font-mono);font-size:2.1rem;font-weight:700;}
+.raffle-card .price span{font-size:1rem;font-weight:500;}
+.raffle-card ul{list-style:none;padding:0;margin:16px 0 22px;}
+.raffle-card li{padding:6px 0;border-top:1px solid rgba(255,255,255,.2);font-size:.92rem;}
+.raffle-card li:first-child{border-top:none;}
+
+/* ============ TICKETS ============ */
+.ticket-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--paper-2);}
+.ticket-card{background:var(--white);padding:32px 28px;border-left:1px solid var(--paper-2);}
+.ticket-card:first-child{border-left:none;}
+.ticket-card.featured{background:var(--asphalt);color:var(--white);}
+.ticket-card .tname{font-family:var(--font-mono);font-size:.75rem;color:var(--red);letter-spacing:.5px;}
+.ticket-card.featured .tname{color:#ff8b93;}
+.ticket-card h3{margin-top:8px;font-size:1.5rem;}
+.ticket-card .price{font-family:var(--font-mono);font-size:2.2rem;font-weight:700;margin-top:14px;}
+.ticket-card .price small{font-size:.9rem;font-weight:500;}
+.ticket-card ul{list-style:none;padding:0;margin:20px 0 26px;}
+.ticket-card li{font-size:.9rem;padding:7px 0;border-top:1px solid var(--paper-2);color:var(--ink-soft);}
+.ticket-card.featured li{border-top:1px solid #3a3e46;color:#C7C9CE;}
+.ticket-card li:first-child{border-top:none;}
+.qty-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;}
+.qty-row button{width:34px;height:34px;border:1.5px solid currentColor;background:none;color:inherit;font-family:var(--font-mono);font-size:1rem;cursor:pointer;}
+.qty-row .qty-val{font-family:var(--font-mono);font-size:1.1rem;min-width:24px;text-align:center;}
+
+/* ============ FORMS ============ */
+.form-shell{background:var(--white);border:1px solid var(--paper-2);padding:40px;max-width:760px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.field{margin-bottom:20px;}
+.field.full{grid-column:1/-1;}
+.field label{display:block;font-family:var(--font-mono);font-size:.75rem;color:var(--ink-soft);margin-bottom:7px;letter-spacing:.3px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:12px 14px;border:1.5px solid #C9C7BE;background:var(--paper);
+  font-family:var(--font-body);font-size:.95rem;color:var(--ink);
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);outline:none;background:var(--white);}
+.field textarea{resize:vertical;min-height:90px;}
+.form-note{font-size:.82rem;color:var(--ink-soft);margin-top:16px;}
+.confirm-box{display:none;background:#EAF3EA;border:1.5px solid #2f7a3a;padding:20px 24px;margin-top:20px;color:#1f5426;font-weight:600;}
+.confirm-box.show{display:block;}
+
+/* ============ SPONSORS ============ */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:50px;}
+.tier{background:var(--white);border:1px solid var(--paper-2);border-top:5px solid var(--blue);padding:26px;}
+.tier.tier-red{border-top-color:var(--red);}
+.tier.tier-chrome{border-top-color:#8b8f97;}
+.tier .tname{font-family:var(--font-mono);font-size:.75rem;color:var(--ink-soft);}
+.tier h4{font-size:1.35rem;margin-top:6px;}
+.tier .amount{font-family:var(--font-mono);font-size:1.5rem;font-weight:700;margin-top:14px;color:var(--ink);}
+.tier ul{padding-left:18px;margin:14px 0 0;color:var(--ink-soft);font-size:.88rem;}
+.tier li{margin-bottom:6px;}
+.sponsor-strip{background:var(--white);border:1px solid var(--paper-2);padding:36px;text-align:center;}
+.logo-row{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:24px;}
+.logo-slot{
+  width:150px;height:80px;border:1.5px dashed #C9C7BE;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:.7rem;color:#9a988f;text-align:center;padding:8px;
+}
+
+/* ============ SOCIAL ============ */
+.social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+.social-card{background:var(--asphalt-2);border:1px solid var(--line);}
+.social-card .post-media{aspect-ratio:1/1;background:linear-gradient(135deg,var(--asphalt-3),var(--asphalt));display:flex;align-items:center;justify-content:center;color:#5b5f68;font-family:var(--font-mono);font-size:.72rem;text-align:center;padding:14px;}
+.social-card .post-body{padding:16px 18px;}
+.social-card .handle{font-family:var(--font-mono);font-size:.72rem;color:#ff8b93;}
+.social-card p{color:#D7D9DD;font-size:.9rem;margin-top:8px;}
+.social-follow{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px;}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid var(--line);padding:10px 18px;
+  font-family:var(--font-mono);font-size:.82rem;color:var(--chrome);text-decoration:none;
+}
+.chip:hover{border-color:var(--red);color:var(--white);}
+.yt-banner{
+  margin-top:40px;background:var(--red);color:var(--white);
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
+  padding:26px 32px;
+}
+.yt-banner h4{font-size:1.3rem;}
+.yt-banner p{color:#ffe1e3;margin-top:4px;font-size:.9rem;}
+
+/* ============ FOOTER ============ */
+footer{background:#0F1014;color:#9EA1A8;padding:60px 0 26px;}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;}
+.foot-brand{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.foot-brand span{font-family:var(--font-display);font-weight:700;color:var(--white);font-size:1.15rem;}
+footer h5{font-family:var(--font-mono);color:var(--chrome);font-size:.78rem;letter-spacing:.5px;margin-bottom:16px;}
+footer ul{list-style:none;padding:0;margin:0;}
+footer li{margin-bottom:10px;font-size:.88rem;}
+footer a{text-decoration:none;color:#9EA1A8;}
+footer a:hover{color:var(--white);}
+.foot-bottom{border-top:1px solid #262930;margin-top:44px;padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:.78rem;}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px){
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-diag{opacity:.5;width:100%;right:0;}
+  .about-grid,.two-col{grid-template-columns:1fr;gap:36px;}
+  .ticket-grid{grid-template-columns:1fr;}
+  .ticket-card{border-left:none;border-top:1px solid var(--paper-2);}
+  .ticket-card:first-child{border-top:none;}
+  .tier-grid{grid-template-columns:1fr;}
+  .social-grid{grid-template-columns:1fr;}
+  .form-grid{grid-template-columns:1fr;}
+  .foot-grid{grid-template-columns:1fr 1fr;}
+  .raffle-inner{grid-template-columns:1fr;}
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site">
+  <div class="nav">
+    <a href="#home" class="brand">
+      <svg class="brand-mark" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="100" height="100" fill="none"/>
+        <polygon points="20,15 85,15 60,50 85,85 20,85" fill="none" stroke="var(--chrome)" stroke-width="4"/>
+        <text x="50" y="58" font-family="Rajdhani" font-weight="700" font-size="34" fill="var(--chrome)" text-anchor="middle">K</text>
+      </svg>
+      <span class="brand-text">KPS<span>Karting Provincial Santafesino</span></span>
+    </a>
+    <nav class="links" id="navLinks">
+      <a href="#campeonato">Campeonato</a>
+      <a href="#calendario">Fechas</a>
+      <a href="#puntuaciones">Puntuaciones</a>
+      <a href="#reglamento">Reglamento</a>
+      <a href="#rifa">Rifa</a>
+      <a href="#entradas">Entradas</a>
+      <a href="#sponsors">Sponsors</a>
+      <a href="#redes">Redes</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#inscripcion" class="btn btn-outline">Inscribirse</a>
+      <a href="#entradas" class="btn btn-red">Comprar entradas</a>
+    </div>
+    <button class="burger" id="burgerBtn" aria-label="Abrir menú" aria-expanded="false">☰</button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<div id="home" class="hero">
+  <div class="hero-flag"></div>
+  <div class="hero-diag"></div>
+  <div class="hero-inner">
+    <div>
+      <span class="hero-eyebrow">TEMPORADA 2026 · FASE REGULAR EN CURSO</span>
+      <h1>Karting de <em>asfalto</em>,<br>hecho en Santa Fe.</h1>
+      <p class="lead">Nueve fechas, un ambiente familiar y la transparencia técnica como bandera. Desde Escuelita Light hasta 125cc 2T Internacional — pilotos de Santa Fe, la región centro y Córdoba compitiendo en el mismo circuito.</p>
+      <div class="hero-actions">
+        <a href="#inscripcion" class="btn btn-red">Inscribirme como piloto</a>
+        <a href="#entradas" class="btn btn-outline">Comprar entradas</a>
+        <a href="#rifa" class="btn btn-outline">Rifa solidaria</a>
+      </div>
+    </div>
+    <div class="hero-panel">
+      <h3>Próxima fecha</h3>
+      <p style="color:#C7C9CE;font-size:.9rem;">6ª fecha — Fase regular</p>
+      <div class="countdown" id="countdown">
+        <div><span class="num" id="cd-d">00</span><span class="lbl">Días</span></div>
+        <div><span class="num" id="cd-h">00</span><span class="lbl">Hs</span></div>
+        <div><span class="num" id="cd-m">00</span><span class="lbl">Min</span></div>
+      </div>
+      <div class="date-line">📍 Autódromo Provincial · 19 y 20 de septiembre</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TICKER ============ -->
+<div class="ticker" role="marquee" aria-label="Novedades">
+  <div class="ticker-track" id="tickerTrack">
+    <span>6ª FECHA · 19 Y 20 DE SEPTIEMBRE</span>
+    <span>INSCRIPCIONES ABIERTAS PARA TODAS LAS CATEGORÍAS</span>
+    <span>RIFA SOLIDARIA KPS 2026 — SORTEO EN LA 7ª FECHA</span>
+    <span>SEGUÍ LAS TRANSMISIONES EN VIVO POR YOUTUBE</span>
+    <span>6ª FECHA · 19 Y 20 DE SEPTIEMBRE</span>
+    <span>INSCRIPCIONES ABIERTAS PARA TODAS LAS CATEGORÍAS</span>
+    <span>RIFA SOLIDARIA KPS 2026 — SORTEO EN LA 7ª FECHA</span>
+    <span>SEGUÍ LAS TRANSMISIONES EN VIVO POR YOUTUBE</span>
+  </div>
+</div>
+
+<!-- ============ SOBRE KPS ============ -->
+<section id="sobre">
+  <div class="wrap">
+    <div class="about-grid">
+      <div>
+        <span class="kicker">Quiénes somos</span>
+        <h2>Profesionalizar el karting, sin perder el espíritu de familia.</h2>
+        <div class="about-copy" style="margin-top:22px;">
+          <p><strong>Misión:</strong> trabajar la transparencia técnica de la participación, penalizando las actitudes que empañan este deporte, y fomentar con incentivos la mejora constante de pilotos y equipos.</p>
+          <p><strong>Visión:</strong> ser la competencia elegida por quienes buscan convertirse en pilotos de élite — una escuela para las categorías nacionales, con ambiente familiar y atractivos para participantes y visitantes.</p>
+        </div>
+        <ul class="values-list">
+          <li>Seriedad</li><li>Transparencia</li><li>Competitividad</li><li>Lealtad</li><li>Familiaridad</li>
+        </ul>
+      </div>
+      <div class="team-panel">
+        <div class="team-panel-head">
+          <span>ORGANIZACIÓN</span>
+          <h3>El equipo detrás de cada fecha</h3>
+        </div>
+        <div class="team-row"><span class="name">Lucas</span><span class="role">RRPP y Comercial</span></div>
+        <div class="team-row"><span class="name">Ángel</span><span class="role">Deportivo y Técnico</span></div>
+        <div class="team-row"><span class="name">Any</span><span class="role">Redes Sociales</span></div>
+        <div class="team-row"><span class="name">Luis</span><span class="role">Prensa y Locución</span></div>
+        <div class="team-row"><span class="name">Richard</span><span class="role">Fotografía</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CATEGORÍAS ============ -->
+<section id="campeonato" style="background:var(--white);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Categorías 2026</span>
+      <h2>Una categoría para cada etapa del piloto.</h2>
+      <p>Desde el primer contacto con el karting hasta la máxima potencia nacional. Confirmá tu categoría al momento de inscribirte.</p>
+    </div>
+    <div class="cat-list">
+      <div class="cat-row">
+        <span class="idx">01</span>
+        <div><h4>Escuelita Light</h4><p class="desc">Iniciación para los pilotos más jóvenes, motor de baja cilindrada y foco en aprendizaje.</p></div>
+        <span class="cat-tag">Infantil</span>
+      </div>
+      <div class="cat-row">
+        <span class="idx">02</span>
+        <div><h4>Cadete</h4><p class="desc">Segundo escalón formativo, previo al salto a las categorías menores de competición.</p></div>
+        <span class="cat-tag">Infantil</span>
+      </div>
+      <div class="cat-row">
+        <span class="idx">03</span>
+        <div><h4>Menor</h4><p class="desc">Primeros pasos en competencia de punta a punta, bajo estricto control técnico.</p></div>
+        <span class="cat-tag">Juvenil</span>
+      </div>
+      <div class="cat-row">
+        <span class="idx">04</span>
+        <div><h4>Standard</h4><p class="desc">Categoría de acceso para pilotos que se inician en equipos con motor estándar.</p></div>
+        <span class="cat-tag">Amateur</span>
+      </div>
+      <div class="cat-row">
+        <span class="idx">05</span>
+        <div><h4>Master</h4><p class="desc">Pensada para pilotos +35, con la misma exigencia técnica y otro ritmo de carrera.</p></div>
+        <span class="cat-tag">Master</span>
+      </div>
+      <div class="cat-row">
+        <span class="idx">06</span>
+        <div><h4>Sudam Junior / Senior</h4><p class="desc">Escalón intermedio hacia la máxima potencia, divido por edad de piloto.</p></div>
+        <span class="cat-tag">Regional</span>
+      </div>
+      <div class="cat-row">
+        <span class="idx">07</span>
+        <div><h4>125cc 2T Nacional</h4><p class="desc">Motor dos tiempos de referencia nacional, la puerta de entrada a la elite.</p></div>
+        <span class="cat-tag">Nacional</span>
+      </div>
+      <div class="cat-row">
+        <span class="idx">08</span>
+        <div><h4>125cc 2T Internacional</h4><p class="desc">La categoría reina del campeonato — máxima potencia y el nivel más competitivo de KPS.</p></div>
+        <span class="cat-tag">Elite</span>
+      </div>
+    </div>
+    <p class="form-note" style="margin-top:22px;">¿Dudas sobre en qué categoría inscribirte? Escribinos por WhatsApp antes de completar el formulario.</p>
+  </div>
+</section>
+
+<!-- ============ CALENDARIO ============ -->
+<section id="calendario" class="dark-section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Calendario 2026</span>
+      <h2>Nueve fechas de fase regular.</h2>
+      <p>KPS tiene periodicidad mensual: nueve fechas de competencia, con definición de copas tras la sexta.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item done"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">1ª FECHA</span><h4>25 y 26 de abril</h4><span class="status-pill done">Corrida</span></div>
+        <p>Apertura de temporada.</p>
+      </div>
+      <div class="tl-item done"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">2ª FECHA</span><h4>23 y 24 de mayo</h4><span class="status-pill done">Corrida</span></div>
+      </div>
+      <div class="tl-item done"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">3ª FECHA</span><h4>20 y 21 de junio</h4><span class="status-pill done">Corrida</span></div>
+      </div>
+      <div class="tl-item done"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">4ª FECHA</span><h4>18 y 19 de julio</h4><span class="status-pill done">Corrida</span></div>
+      </div>
+      <div class="tl-item done"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">5ª FECHA</span><h4>22 y 23 de agosto</h4><span class="status-pill done">Corrida</span></div>
+      </div>
+      <div class="tl-item next"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">6ª FECHA</span><h4>19 y 20 de septiembre</h4><span class="status-pill next">Próxima</span></div>
+        <p>Cierre de la fase regular — definición de copas.</p>
+      </div>
+      <div class="tl-item"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">7ª FECHA</span><h4>17 y 18 de octubre</h4><span class="status-pill tbd">A disputarse</span></div>
+        <p>Sorteo de la Rifa Solidaria KPS.</p>
+      </div>
+      <div class="tl-item"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">8ª FECHA</span><h4>21 y 22 de noviembre</h4><span class="status-pill tbd">A disputarse</span></div>
+      </div>
+      <div class="tl-item"><div class="tl-dot"></div>
+        <div class="tl-head"><span class="fecha-n">9ª FECHA</span><h4>A definir</h4><span class="status-pill tbd">A definir</span></div>
+        <p>Fecha de cierre de temporada.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PUNTUACIONES ============ -->
+<section id="puntuaciones" style="background:var(--white);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Tabla de posiciones</span>
+      <h2>Puntuaciones al día de la fecha.</h2>
+      <p>Elegí una categoría para ver el acumulado tras la 5ª fecha. Se actualiza después de cada carrera.</p>
+    </div>
+    <div class="board">
+      <div class="board-tabs" id="boardTabs">
+        <button class="active" data-cat="elite">125cc 2T Internacional</button>
+        <button data-cat="standard">Standard</button>
+        <button data-cat="master">Master</button>
+      </div>
+      <table class="timing">
+        <thead>
+          <tr><th>Pos</th><th>Piloto</th><th>Equipo</th><th>Localidad</th><th style="text-align:right;">Puntos</th></tr>
+        </thead>
+        <tbody id="boardBody"></tbody>
+      </table>
+      <div class="board-foot">Puntuación oficial provisoria — sujeta a homologación técnica. Última actualización: 5ª fecha, 23 de agosto.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REGLAMENTO Y PREMIOS ============ -->
+<section id="reglamento" style="background:var(--paper);">
+  <div class="wrap">
+    <div class="two-col">
+      <div class="rule-card">
+        <span class="kicker">Reglamento</span>
+        <h3>Reglamento técnico y deportivo 2026</h3>
+        <ul>
+          <li>Verificación técnica obligatoria antes de cada clasificación.</li>
+          <li>Sistema de penalizaciones por incidentes en pista, con revisión de comisarios deportivos.</li>
+          <li>Peso mínimo, combustible y motor homologados por categoría.</li>
+          <li>Puntaje por posición de largada y carrera final, sumando ambas fechas del fin de semana.</li>
+          <li>Protocolo de seguridad obligatorio en boxes y sala de enfriamiento.</li>
+        </ul>
+        <a href="#" class="btn btn-outline-dark" onclick="alert('Acá se debe enlazar el PDF oficial del reglamento completo.'); return false;">Descargar reglamento completo (PDF)</a>
+      </div>
+      <div>
+        <span class="kicker">Premios</span>
+        <h3 style="font-size:1.35rem;margin-bottom:14px;">Premiación por fecha y por copa</h3>
+        <div class="prize-tiers">
+          <div class="prize-row"><span class="place">1º</span><span class="what">Trofeo + premio en productos del sponsor de la fecha</span></div>
+          <div class="prize-row"><span class="place">2º</span><span class="what">Trofeo + merchandising oficial KPS</span></div>
+          <div class="prize-row"><span class="place">3º</span><span class="what">Trofeo de terna ganadora por categoría</span></div>
+          <div class="prize-row"><span class="place">Copa</span><span class="what">Premio especial al cierre de la fase regular (6ª fecha)</span></div>
+        </div>
+        <p class="form-note">Los premios entregados en pista pueden variar según el sponsor asignado a cada fecha.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RIFA ============ -->
+<section id="rifa" class="raffle">
+  <div class="wrap raffle-inner">
+    <div>
+      <span class="kicker" style="color:#FFD9DC;">Rifa solidaria KPS</span>
+      <h2>Tu número apoya directo al desarrollo del karting santafesino.</h2>
+      <p>Lo recaudado se destina a mejoras de seguridad en pista y al fondo de premios de las categorías formativas. El sorteo se realiza en vivo, en la 7ª fecha.</p>
+      <div class="hero-actions">
+        <a id="raffleBuyBtnMain" href="https://mpago.la/TU-LINK-RIFA" target="_blank" rel="noopener" class="btn btn-red">Comprar números de rifa</a>
+        <a href="#redes" class="btn btn-outline">Ver el sorteo en vivo</a>
+      </div>
+    </div>
+    <div class="raffle-card">
+      <span class="tname mono" style="color:#FFD9DC;">NÚMERO DE RIFA</span>
+      <div class="price" id="rafflePrice">$5.000 <span>c/u</span></div>
+      <ul id="raffleBenefits">
+        <li>Premio mayor: casco + indumentaria oficial de piloto</li>
+        <li>2º premio: abono de temporada 2027</li>
+        <li>3º premio: merchandising oficial KPS</li>
+      </ul>
+      <a id="raffleBuyBtnCard" href="https://mpago.la/TU-LINK-RIFA" target="_blank" rel="noopener" class="btn btn-outline btn-block">Ver todos los premios</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ENTRADAS ============ -->
+<section id="entradas" style="background:var(--white);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Entradas</span>
+      <h2>Sumate a boxes el fin de semana de carrera.</h2>
+      <p>Entrada válida para las dos jornadas de la fecha. Los menores de 12 años no pagan entrada.</p>
+    </div>
+    <div class="ticket-grid" id="ticketGrid">
+      <div class="ticket-card">
+        <span class="tname">GENERAL</span>
+        <h3>Tribuna</h3>
+        <div class="price">$3.500 <small>por persona</small></div>
+        <ul>
+          <li>Acceso a tribunas y paddock público</li>
+          <li>Válida sábado y domingo</li>
+          <li>Menores de 12 años sin cargo</li>
+        </ul>
+        <a href="https://mpago.la/TU-LINK-TRIBUNA" target="_blank" rel="noopener" class="btn btn-outline-dark btn-block">Comprar</a>
+      </div>
+      <div class="ticket-card featured">
+        <span class="tname">FAMILIAR</span>
+        <h3>Pack Familia</h3>
+        <div class="price">$9.000 <small>hasta 4 personas</small></div>
+        <ul>
+          <li>2 adultos + 2 menores</li>
+          <li>Acceso a fan zone y sorteos</li>
+          <li>El más elegido por las familias KPS</li>
+        </ul>
+        <a href="https://mpago.la/TU-LINK-FAMILIAR" target="_blank" rel="noopener" class="btn btn-red btn-block">Comprar</a>
+      </div>
+      <div class="ticket-card">
+        <span class="tname">BOX</span>
+        <h3>Acceso a Boxes</h3>
+        <div class="price">$6.000 <small>por persona</small></div>
+        <ul>
+          <li>Ingreso a boxes y sala de enfriamiento</li>
+          <li>Entrevistas y transmisión en vivo desde el lugar</li>
+          <li>Cupos limitados por fecha</li>
+        </ul>
+        <a href="https://mpago.la/TU-LINK-BOXES" target="_blank" rel="noopener" class="btn btn-outline-dark btn-block">Comprar</a>
+      </div>
+    </div>
+    <p class="form-note" style="margin-top:20px;">Cada botón "Comprar" te lleva a un link de pago de Mercado Pago para 1 entrada de ese tipo. Si necesitás varias, repetí la compra o escribinos por WhatsApp para coordinarlas juntas. Después de pagar, te enviamos la confirmación por WhatsApp o e-mail.</p>
+  </div>
+</section>
+
+<!-- ============ INSCRIPCIÓN ============ -->
+<section id="inscripcion" style="background:var(--paper);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Inscripción de pilotos</span>
+      <h2>Sumate al campeonato 2026.</h2>
+      <p>Completá tus datos y los de tu equipo. Te contactamos para coordinar la verificación técnica antes de tu primera fecha.</p>
+    </div>
+    <form class="form-shell" id="inscripcionForm"
+          action="https://formspree.io/f/TU_ID_DE_FORMSPREE"
+          method="POST"
+          onsubmit="return handleForm(event,'inscripcionConfirm','¡Listo! Recibimos tu inscripción, te contactamos por WhatsApp o e-mail para coordinar la verificación técnica.')">
+      <input type="hidden" name="_subject" value="Nueva inscripción — KPS">
+      <div class="form-grid">
+        <div class="field"><label for="i-nombre">Nombre y apellido</label><input id="i-nombre" name="Nombre y apellido" required></div>
+        <div class="field"><label for="i-dni">DNI</label><input id="i-dni" name="DNI" required></div>
+        <div class="field"><label for="i-nacimiento">Fecha de nacimiento</label><input type="date" id="i-nacimiento" name="Fecha de nacimiento" required></div>
+        <div class="field"><label for="i-localidad">Localidad</label><input id="i-localidad" name="Localidad" required></div>
+        <div class="field"><label for="i-categoria">Categoría</label>
+          <select id="i-categoria" name="Categoría" required>
+            <option value="">Elegí una categoría</option>
+            <option>Escuelita Light</option><option>Cadete</option><option>Menor</option>
+            <option>Standard</option><option>Master</option><option>Sudam Junior</option>
+            <option>Sudam Senior</option><option>125cc 2T Nacional</option><option>125cc 2T Internacional</option>
+          </select>
+        </div>
+        <div class="field"><label for="i-equipo">Equipo (opcional)</label><input id="i-equipo" name="Equipo"></div>
+        <div class="field"><label for="i-tel">Teléfono / WhatsApp</label><input id="i-tel" name="Teléfono" type="tel" required></div>
+        <div class="field"><label for="i-mail">E-mail</label><input id="i-mail" name="E-mail" type="email" required></div>
+        <div class="field full"><label for="i-obs">Observaciones</label><textarea id="i-obs" name="Observaciones" placeholder="Kart propio, número anterior de competencia, etc."></textarea></div>
+      </div>
+      <button type="submit" class="btn btn-red">Enviar inscripción</button>
+      <div class="confirm-box" id="inscripcionConfirm"></div>
+      <p class="form-note">Al inscribirte aceptás el reglamento deportivo y técnico vigente de KPS.</p>
+    </form>
+  </div>
+</section>
+
+<!-- ============ SPONSORS ============ -->
+<section id="sponsors" class="dark-section">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">Sponsors</span>
+      <h2>Tu marca, dentro y fuera del circuito.</h2>
+      <p>KPS conecta tu marca con familiaridad, competitividad y entretenimiento. Estos son los espacios de sponsoreo disponibles por fecha.</p>
+    </div>
+    <div class="tier-grid">
+      <div class="tier tier-red">
+        <span class="tname">POR FECHA</span>
+        <h4>Sponsor Bandera</h4>
+        <div class="amount">$500.000</div>
+        <ul>
+          <li>Hasta 4 flybanners en circuito y boxes</li>
+          <li>2 banderas publicitarias (150×100cm)</li>
+          <li>Presencia en digital y fan zone</li>
+        </ul>
+      </div>
+      <div class="tier">
+        <span class="tname">POR FECHA</span>
+        <h4>Sponsor Enfriamiento</h4>
+        <div class="amount">$350.000</div>
+        <ul>
+          <li>Ambientación de la sala de enfriamiento</li>
+          <li>Marca en las entrevistas en vivo</li>
+          <li>Presencia en el contenido de YouTube</li>
+        </ul>
+      </div>
+      <div class="tier tier-chrome">
+        <span class="tname">POR FECHA</span>
+        <h4>Sponsor Velocidad</h4>
+        <div class="amount">$200.000</div>
+        <ul>
+          <li>Presencia en circuito</li>
+          <li>Logo en publicaciones digitales</li>
+        </ul>
+      </div>
+    </div>
+    <div class="sponsor-strip">
+      <span class="kicker">Sponsor oficial de temporada</span>
+      <h3 style="font-size:1.5rem;margin-top:6px;">Sponsor Oficial KPS 2026 — $1.400.000</h3>
+      <p style="color:var(--ink-soft);margin-top:10px;max-width:60ch;margin-left:auto;margin-right:auto;">Incluye Sponsor Bandera, premiación en todas las fechas (trofeo a la terna ganadora por categoría) y logo institucional durante toda la temporada.</p>
+      <div class="logo-row">
+        <div class="logo-slot">Espacio para logo de sponsor</div>
+        <div class="logo-slot">Espacio para logo de sponsor</div>
+        <div class="logo-slot">Espacio para logo de sponsor</div>
+        <div class="logo-slot">Espacio para logo de sponsor</div>
+      </div>
+      <div class="hero-actions" style="justify-content:center;margin-top:26px;">
+        <a href="#contacto" class="btn btn-red">Quiero ser sponsor</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REDES SOCIALES ============ -->
+<section id="redes" style="background:var(--asphalt-2);">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker" style="color:var(--red);">Comunidad</span>
+      <h2 style="color:var(--white);">Lo último de KPS en redes.</h2>
+      <p style="color:#C7C9CE;">Seguinos para no perderte fotos de boxes, resultados en vivo y el resumen de cada fecha.</p>
+    </div>
+    <div class="social-grid">
+      <div class="social-card">
+        <div class="post-media">Foto de podio · última fecha</div>
+        <div class="post-body">
+          <span class="handle">@kartingprovincialsantafesino</span>
+          <p>Así se vivió la 5ª fecha en boxes — gracias a todos los que se acercaron a la familia KPS.</p>
+        </div>
+      </div>
+      <div class="social-card">
+        <div class="post-media">Reel · vuelta rápida</div>
+        <div class="post-body">
+          <span class="handle">@KPSoficial</span>
+          <p>La vuelta más rápida de la categoría 125cc 2T Internacional, cronometrada en vivo.</p>
+        </div>
+      </div>
+      <div class="social-card">
+        <div class="post-media">Anuncio · próxima fecha</div>
+        <div class="post-body">
+          <span class="handle">@KartingProvincialSantafesino</span>
+          <p>Ya están abiertas las inscripciones para la 6ª fecha. Cupos limitados por categoría.</p>
+        </div>
+      </div>
+    </div>
+    <p class="form-note" style="color:#8b8e95;margin-top:16px;">Vista previa ilustrativa — para mostrar las publicaciones reales acá, hay que conectar este bloque a la API oficial de Instagram/Facebook (Meta Graph API).</p>
+    <div class="social-follow">
+      <a class="chip" href="#" target="_blank" rel="noopener">Instagram · @kartingprovincialsantafesino</a>
+      <a class="chip" href="#" target="_blank" rel="noopener">Facebook · KPSoficial</a>
+      <a class="chip" href="#" target="_blank" rel="noopener">X · KPSoficial</a>
+    </div>
+    <div class="yt-banner">
+      <div>
+        <h4>Mirá las carreras en vivo por YouTube</h4>
+        <p>Transmitimos cada fecha completa, con entrevistas desde la sala de enfriamiento.</p>
+      </div>
+      <a href="#" target="_blank" rel="noopener" class="btn" style="background:var(--white);color:var(--red);">Suscribirme al canal</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<footer id="contacto">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><polygon points="20,15 85,15 60,50 85,85 20,85" fill="none" stroke="#E7E9EC" stroke-width="4"/><text x="50" y="58" font-family="Rajdhani" font-weight="700" font-size="34" fill="#E7E9EC" text-anchor="middle">K</text></svg>
+          <span>KPS</span>
+        </div>
+        <p>Karting Provincial Santafesino. Competencia oficial de karting en asfalto — Santa Fe, Argentina.</p>
+      </div>
+      <div>
+        <h5>CAMPEONATO</h5>
+        <ul>
+          <li><a href="#campeonato">Categorías</a></li>
+          <li><a href="#calendario">Calendario</a></li>
+          <li><a href="#puntuaciones">Puntuaciones</a></li>
+          <li><a href="#reglamento">Reglamento</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>PARTICIPAR</h5>
+        <ul>
+          <li><a href="#inscripcion">Inscribirse</a></li>
+          <li><a href="#entradas">Comprar entradas</a></li>
+          <li><a href="#rifa">Rifa solidaria</a></li>
+          <li><a href="#sponsors">Ser sponsor</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>CONTACTO</h5>
+        <ul>
+          <li>+54 9 3425 24-6790</li>
+          <li>+54 9 3425 06-0049</li>
+          <li><a href="#">Instagram: @kartingprovincialsantafesino</a></li>
+          <li><a href="#">Facebook / X: @KPSoficial</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Karting Provincial Santafesino. Todos los derechos reservados.</span>
+      <span>Sitio desarrollado para KPS.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/**
+ * ============ PANEL DE CONTROL EN GOOGLE SHEETS ============
+ * Entradas y rifa se administran desde una planilla de Google, no desde este código.
+ * Configuración única (una sola vez):
+ *  1. Creá una Google Sheet con las columnas: tipo | nombre | precio | detalle | link_pago | activo
+ *  2. Archivo > Compartir > Publicar en la web > formato CSV > Publicar.
+ *  3. Pegá acá abajo la URL que te da ese paso, reemplazando el texto de ejemplo.
+ * Mientras esa URL no esté configurada, el sitio sigue mostrando el contenido de ejemplo
+ * que ya está escrito más abajo en el HTML — nunca se rompe ni queda vacío.
+ */
+const KPS_SHEET_CSV_URL = 'PEGA_AQUI_LA_URL_CSV_DE_TU_GOOGLE_SHEET';
+
+function kpsEsc(str){
+  const d = document.createElement('div');
+  d.textContent = str == null ? '' : String(str);
+  return d.innerHTML;
+}
+
+function kpsTicketCardHtml(row, isFeatured){
+  const detalle = (row.detalle || '').split('|').filter(Boolean)
+    .map(d => `<li>${kpsEsc(d.trim())}</li>`).join('');
+  return `<div class="ticket-card${isFeatured ? ' featured' : ''}">
+    <span class="tname">${kpsEsc((row.tipo || '').toUpperCase())}</span>
+    <h3>${kpsEsc(row.nombre)}</h3>
+    <div class="price">${kpsEsc(row.precio)}</div>
+    <ul>${detalle}</ul>
+    <a href="${kpsEsc(row.link_pago || '#')}" target="_blank" rel="noopener" class="btn ${isFeatured ? 'btn-red' : 'btn-outline-dark'} btn-block">Comprar</a>
+  </div>`;
+}
+
+async function kpsLoadCatalog(){
+  if(!KPS_SHEET_CSV_URL || KPS_SHEET_CSV_URL.includes('PEGA_AQUI')){
+    return; // Todavía no se configuró la planilla: se conserva el contenido de ejemplo.
+  }
+  try{
+    const res = await fetch(KPS_SHEET_CSV_URL);
+    if(!res.ok) throw new Error('No se pudo leer la planilla');
+    const csvText = await res.text();
+    const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+    const rows = parsed.data.filter(r => String(r.activo || '').trim().toUpperCase() === 'SI');
+
+    const entradas = rows.filter(r => String(r.tipo || '').trim().toLowerCase() === 'entrada');
+    const rifas = rows.filter(r => String(r.tipo || '').trim().toLowerCase() === 'rifa');
+
+    if(entradas.length){
+      const grid = document.getElementById('ticketGrid');
+      grid.innerHTML = entradas.map((r, i) => kpsTicketCardHtml(r, i === 1)).join('');
+    }
+    if(rifas.length){
+      const r = rifas[0];
+      const detalleLis = (r.detalle || '').split('|').filter(Boolean)
+        .map(d => `<li>${kpsEsc(d.trim())}</li>`).join('');
+      document.getElementById('rafflePrice').innerHTML = `${kpsEsc(r.precio)} <span>c/u</span>`;
+      document.getElementById('raffleBenefits').innerHTML = detalleLis;
+      const link = kpsEsc(r.link_pago || '#');
+      document.getElementById('raffleBuyBtnMain').href = link;
+      document.getElementById('raffleBuyBtnCard').href = link;
+    }
+  }catch(err){
+    console.error('KPS: no se pudo cargar el catálogo desde Google Sheets, se muestra el contenido de ejemplo.', err);
+  }
+}
+document.addEventListener('DOMContentLoaded', kpsLoadCatalog);
+
+// ---- menú móvil ----
+const burger = document.getElementById('burgerBtn');
+const navLinks = document.getElementById('navLinks');
+burger.addEventListener('click', () => {
+  const open = navLinks.classList.toggle('open');
+  burger.setAttribute('aria-expanded', open);
+});
+navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  navLinks.classList.remove('open');
+  burger.setAttribute('aria-expanded', 'false');
+}));
+
+// ---- countdown a la próxima fecha (19 sep 2026, 00:00) ----
+const target = new Date('2026-09-19T09:00:00-03:00').getTime();
+function tickCountdown(){
+  const now = Date.now();
+  const diff = Math.max(0, target - now);
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+}
+tickCountdown();
+setInterval(tickCountdown, 30000);
+
+// ---- tabla de puntuaciones ----
+const standings = {
+  elite: [
+    ['1','Franco Belliboni','Rotax Team','Santa Fe','198'],
+    ['2','Ignacio Weiss','KPS Racing','Rosario','187'],
+    ['3','Tomás Guiraldes','Motor Sur','Córdoba','179'],
+    ['4','Bruno Ferreyra','Independiente','Rafaela','162'],
+    ['5','Nahuel Prieto','Escudería Litoral','Paraná','150'],
+  ],
+  standard: [
+    ['1','Lucía Farías','KPS Racing','Santo Tomé','171'],
+    ['2','Mateo Bianchi','Motor Sur','Santa Fe','168'],
+    ['3','Agustín Roldán','Independiente','Esperanza','155'],
+    ['4','Camila Sosa','Escudería Litoral','Rosario','140'],
+    ['5','Fermín Ayala','Rotax Team','Rafaela','133'],
+  ],
+  master: [
+    ['1','Diego Fontana','Independiente','Santa Fe','160'],
+    ['2','Marcelo Ibarra','Motor Sur','Córdoba','154'],
+    ['3','Sergio Villalba','KPS Racing','Rosario','149'],
+    ['4','Pablo Ortigoza','Escudería Litoral','Rafaela','131'],
+    ['5','Hernán Duarte','Rotax Team','Paraná','120'],
+  ]
+};
+function renderBoard(cat){
+  const body = document.getElementById('boardBody');
+  body.innerHTML = '';
+  standings[cat].forEach(row => {
+    const tr = document.createElement('tr');
+    tr.className = row[0] === '1' ? 'p1' : row[0] === '2' ? 'p2' : row[0] === '3' ? 'p3' : '';
+    tr.innerHTML = `<td class="pos">${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td class="pts">${row[4]}</td>`;
+    body.appendChild(tr);
+  });
+}
+document.getElementById('boardTabs').addEventListener('click', e => {
+  if(e.target.tagName !== 'BUTTON') return;
+  document.querySelectorAll('#boardTabs button').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  renderBoard(e.target.dataset.cat);
+});
+renderBoard('elite');
+
+// ---- formulario de inscripción (envío real a Formspree) ----
+async function handleForm(ev, confirmId, message){
+  ev.preventDefault();
+  const form = ev.target;
+  const box = document.getElementById(confirmId);
+  const errorMsg = 'Hubo un problema al enviar el formulario. Probá de nuevo o escribinos directo por WhatsApp.';
+
+  if(form.action.includes('TU_ID_DE_FORMSPREE')){
+    box.textContent = 'Formulario de demostración: falta reemplazar "TU_ID_DE_FORMSPREE" por el ID real de Formspree en el HTML.';
+    box.classList.add('show');
+    return false;
+  }
+
+  try{
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if(response.ok){
+      box.textContent = message;
+      box.classList.add('show');
+      form.reset();
+    } else {
+      box.textContent = errorMsg;
+      box.classList.add('show');
+    }
+  } catch(err){
+    box.textContent = errorMsg;
+    box.classList.add('show');
+  }
+  return false;
+}
+</script>
+</body>
+</html>
