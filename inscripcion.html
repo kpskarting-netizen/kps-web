@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscripción de pilotos — KPS</title>
+<meta name="description" content="Inscripción de pilotos para el campeonato Karting Provincial Santafesino 2026.">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{
+  --asphalt:#15171C; --red:#C81E2C; --blue:#1C5FA8; --chrome:#E7E9EC;
+  --paper:#F3F2EE; --paper-2:#EAE8E1; --ink:#15171C; --ink-soft:#4B4E55; --white:#FFFFFF;
+  --font-display:'Rajdhani',sans-serif; --font-body:'Work Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;margin:0;}
+.mono{font-family:var(--font-mono);}
+a{color:inherit;}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 70px;}
+header{background:var(--asphalt);padding:18px 20px;margin-bottom:40px;}
+header .inner{max-width:720px;margin:0 auto;display:flex;align-items:center;gap:10px;}
+header a{text-decoration:none;color:var(--white);font-family:var(--font-display);font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:10px;}
+header .badge{background:#fff;border-radius:6px;padding:4px 6px;display:flex;}
+header .badge img{height:26px;width:auto;display:block;}
+h1{font-size:1.9rem;margin-bottom:8px;}
+.lead{color:var(--ink-soft);margin-bottom:30px;}
+.card{background:var(--white);border:1px solid var(--paper-2);padding:30px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;}
+.field{margin-bottom:2px;}
+.field.full{grid-column:1/-1;}
+.field label{display:block;font-family:var(--font-mono);font-size:.72rem;color:var(--ink-soft);margin-bottom:6px;letter-spacing:.3px;}
+.field input,.field select,.field textarea{
+  width:100%;padding:11px 13px;border:1.5px solid #C9C7BE;background:var(--paper);
+  font-family:var(--font-body);font-size:.95rem;color:var(--ink);
+}
+.field textarea{min-height:80px;resize:vertical;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);outline:none;background:var(--white);}
+@media(max-width:560px){.form-grid{grid-template-columns:1fr;}}
+
+.pay-box{background:var(--asphalt);color:#fff;padding:22px 24px;margin:6px 0 22px;}
+.pay-box .kicker{font-family:var(--font-mono);font-size:.75rem;color:#ff8b93;}
+.pay-box p{color:#C7C9CE;font-size:.9rem;margin:6px 0 0;}
+.alias-box{font-family:var(--font-mono);font-size:1.3rem;font-weight:700;margin:12px 0;background:rgba(255,255,255,.1);padding:10px 14px;text-align:center;}
+.pay-box label.check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:#C7C9CE;margin-top:12px;}
+.pay-box label.check input{margin-top:3px;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-display);font-weight:700;font-size:1rem;padding:14px 26px;border:none;cursor:pointer;text-decoration:none;width:100%;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:disabled{opacity:.6;cursor:not-allowed;}
+.form-note{font-size:.82rem;color:var(--ink-soft);margin-top:16px;}
+.confirm-box{display:none;background:#EAF3EA;border:1.5px solid #2f7a3a;padding:18px 20px;margin-top:18px;color:#1f5426;font-weight:600;}
+.confirm-box.show{display:block;}
+.confirm-box.error{background:#fde8e7;border-color:var(--red);color:#8a1410;}
+footer{text-align:center;padding:30px 20px;color:var(--ink-soft);font-size:.82rem;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <a href="index.html">
+      <span class="badge"><img id="headerLogo" src="" alt="Logo de KPS" style="display:none;"></span>
+      KPS · Karting Provincial Santafesino
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Inscripción de pilotos</h1>
+  <p class="lead">Completá tus datos, pagá la inscripción por transferencia y subí la referencia del pago. Tu lugar queda <strong>sujeto a confirmación del organizador</strong> una vez que verifiquemos el pago.</p>
+
+  <form class="card" id="inscripcionForm">
+    <div class="form-grid" id="inscripcionFields">
+      <!-- Se completa con las preguntas configuradas en admin.html. Este es el contenido de ejemplo -->
+      <div class="field"><label for="i-nombre">Nombre y apellido</label><input id="i-nombre" name="Nombre y apellido" required></div>
+      <div class="field"><label for="i-dni">DNI</label><input id="i-dni" name="DNI" required></div>
+      <div class="field"><label for="i-nacimiento">Fecha de nacimiento</label><input type="date" id="i-nacimiento" name="Fecha de nacimiento" required></div>
+      <div class="field"><label for="i-localidad">Localidad</label><input id="i-localidad" name="Localidad" required></div>
+      <div class="field"><label for="i-categoria">Categoría</label>
+        <select id="i-categoria" name="Categoría" required>
+          <option value="">Elegí una categoría</option>
+          <option>Escuelita Light</option><option>Cadete</option><option>Menor</option>
+          <option>Standard</option><option>Master</option><option>Sudam Junior</option>
+          <option>Sudam Senior</option><option>125cc 2T Nacional</option><option>125cc 2T Internacional</option>
+        </select>
+      </div>
+      <div class="field"><label for="i-equipo">Equipo (opcional)</label><input id="i-equipo" name="Equipo"></div>
+      <div class="field"><label for="i-tel">Teléfono / WhatsApp</label><input id="i-tel" name="Teléfono" type="tel" required></div>
+      <div class="field"><label for="i-mail">E-mail</label><input id="i-mail" name="E-mail" type="email" required></div>
+      <div class="field full"><label for="i-obs">Observaciones</label><textarea id="i-obs" name="Observaciones" placeholder="Kart propio, número anterior de competencia, etc."></textarea></div>
+    </div>
+
+    <div class="pay-box">
+      <span class="kicker">Cómo pagar la inscripción</span>
+      <p>Transferí el monto de inscripción a este alias de Mercado Pago:</p>
+      <div class="alias-box mono" id="inscripcionAlias">Kps2026</div>
+      <div class="field">
+        <label style="color:#C7C9CE;">Número de comprobante / referencia</label>
+        <input id="i-payref" placeholder="Ej: N° de operación 000123456" required>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="i-payconfirm" required>
+        Confirmo que ya realicé la transferencia por el monto de inscripción correspondiente.
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-red">Enviar inscripción</button>
+    <div class="confirm-box" id="inscripcionConfirm"></div>
+    <p class="form-note">Al inscribirte aceptás el reglamento deportivo y técnico vigente de KPS.</p>
+  </form>
+</div>
+
+<footer>Karting Provincial Santafesino — <a href="index.html">Volver al sitio</a></footer>
+
+<script>
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAplAcQP22J8naIE7SFUTOCfxjH4OLdp-E",
+  authDomain: "gran-rifa-kps.firebaseapp.com",
+  projectId: "gran-rifa-kps",
+  storageBucket: "gran-rifa-kps.firebasestorage.app",
+  messagingSenderId: "343696537914",
+  appId: "1:343696537914:web:5d84dd0e455a532b227803"
+};
+let _db = null;
+function getDb(){
+  if(_db) return _db;
+  if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  _db = firebase.firestore();
+  return _db;
+}
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+let siteContent = null;
+async function getSiteContent(){
+  if(siteContent) return siteContent;
+  try{
+    const doc = await getDb().collection("settings").doc("site_content").get();
+    siteContent = doc.exists ? (doc.data() || {}) : {};
+  }catch(err){
+    console.error("No se pudo leer la configuración.", err);
+    siteContent = {};
+  }
+  return siteContent;
+}
+
+function buildFieldHtml(row, idx){
+  const id = 'campo-' + idx;
+  const tipo = String(row.tipo || 'texto').trim().toLowerCase();
+  const etiqueta = row.etiqueta || ('Campo ' + (idx + 1));
+  const required = row.requerido === true || String(row.requerido || '').trim().toUpperCase() === 'SI';
+  const req = required ? 'required' : '';
+  let inputHtml;
+  if(tipo === 'seleccion'){
+    const opts = (row.opciones || '').split('|').filter(Boolean).map(o => `<option>${esc(o.trim())}</option>`).join('');
+    inputHtml = `<select id="${id}" name="${esc(etiqueta)}" ${req}><option value="">Elegí una opción</option>${opts}</select>`;
+  } else if(tipo === 'parrafo'){
+    inputHtml = `<textarea id="${id}" name="${esc(etiqueta)}" ${req}></textarea>`;
+  } else {
+    const typeMap = { numero: 'number', fecha: 'date', telefono: 'tel', email: 'email' };
+    inputHtml = `<input type="${typeMap[tipo] || 'text'}" id="${id}" name="${esc(etiqueta)}" ${req}>`;
+  }
+  const fullClass = tipo === 'parrafo' ? ' full' : '';
+  return `<div class="field${fullClass}"><label for="${id}">${esc(etiqueta)}</label>${inputHtml}</div>`;
+}
+
+async function loadContent(){
+  const site = await getSiteContent();
+
+  if(site.header_logo){
+    const img = document.getElementById('headerLogo');
+    img.src = site.header_logo;
+    img.style.display = 'block';
+  }
+  if(site.alias_mp){
+    document.getElementById('inscripcionAlias').textContent = site.alias_mp;
+  }
+  if(Array.isArray(site.inscripcion_campos) && site.inscripcion_campos.length){
+    const rows = site.inscripcion_campos.filter(r => r.etiqueta)
+      .sort((a,b) => parseInt(a.orden || '99') - parseInt(b.orden || '99'));
+    if(rows.length){
+      document.getElementById('inscripcionFields').innerHTML = rows.map((r,i) => buildFieldHtml(r,i)).join('');
+    }
+  }
+}
+loadContent();
+
+function genId(){
+  return 'INSC-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+}
+
+document.getElementById('inscripcionForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const form = ev.target;
+  const box = document.getElementById('inscripcionConfirm');
+  box.classList.remove('error');
+  const submitBtn = form.querySelector('button[type="submit"]');
+
+  const payRef = document.getElementById('i-payref').value.trim();
+  const payConfirmed = document.getElementById('i-payconfirm').checked;
+  if(!payRef || !payConfirmed){
+    box.textContent = 'Completá el número de comprobante y confirmá que ya transferiste el pago.';
+    box.classList.add('show','error');
+    return;
+  }
+
+  const datos = {};
+  form.querySelectorAll('#inscripcionFields [name]').forEach(el => { datos[el.name] = el.value; });
+
+  const registro = {
+    id: genId(),
+    datos,
+    payReference: payRef,
+    payConfirmed: true,
+    status: 'pendiente',
+    createdAt: Date.now()
+  };
+
+  try{
+    submitBtn.disabled = true; submitBtn.textContent = 'Enviando…';
+    await getDb().collection('inscripciones').doc(registro.id).set(registro);
+    box.textContent = '¡Listo! Tu inscripción quedó registrada como pendiente. La confirmamos apenas verifiquemos el pago, y te contactamos por WhatsApp o e-mail.';
+    box.classList.remove('error');
+    box.classList.add('show');
+    form.reset();
+  }catch(err){
+    console.error('No se pudo guardar la inscripción.', err);
+    box.textContent = 'Hubo un problema al enviar la inscripción. Probá de nuevo o escribinos directo por WhatsApp.';
+    box.classList.add('show','error');
+  }finally{
+    submitBtn.disabled = false; submitBtn.textContent = 'Enviar inscripción';
+  }
+});
+</script>
+</body>
+</html>

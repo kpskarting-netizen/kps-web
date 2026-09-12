@@ -143,24 +143,7 @@ nav.links a:hover{border-bottom-color:var(--red);color:var(--white);}
   padding:26px;
 }
 .hero-panel h3{color:var(--white);font-size:1rem;text-transform:none;margin-bottom:4px;}
-.countdown{display:flex;gap:14px;margin-top:16px;}
-.countdown div{text-align:center;flex:1;}
-.countdown .num{font-family:var(--font-mono);font-size:1.9rem;font-weight:700;color:var(--white);display:block;}
-.countdown .lbl{font-size:.68rem;color:#B7BAC0;text-transform:uppercase;letter-spacing:.8px;}
 .hero-panel .date-line{margin-top:14px;font-size:.9rem;color:#C7C9CE;padding-top:14px;border-top:1px solid rgba(255,255,255,.15);}
-
-/* ============ TICKER ============ */
-.ticker{
-  background:var(--red);
-  color:var(--white);
-  overflow:hidden;
-  white-space:nowrap;
-  border-bottom:1px solid rgba(0,0,0,.15);
-}
-.ticker-track{display:inline-flex;animation:scroll 32s linear infinite;padding:10px 0;}
-.ticker-track span{font-family:var(--font-mono);font-size:.82rem;padding:0 28px;letter-spacing:.4px;}
-.ticker-track span::after{content:"◆";margin-left:28px;opacity:.6;}
-@keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* ============ SECTION SHELL ============ */
 section{padding:86px 0;}
@@ -174,23 +157,12 @@ section{padding:86px 0;}
 .dark-section .section-head p{color:#C7C9CE;}
 
 /* ============ SOBRE KPS ============ */
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;}
-.about-copy p + p{margin-top:16px;}
-.about-copy{font-size:1.06rem;color:var(--ink-soft);}
 .values-list{list-style:none;margin:28px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:10px;}
 .values-list li{
   font-family:var(--font-mono);font-size:.8rem;
   border:1.5px solid var(--asphalt);padding:7px 14px;
   color:var(--ink);
 }
-.team-panel{background:var(--white);border:1px solid var(--paper-2);}
-.team-panel-head{background:var(--asphalt);color:var(--white);padding:18px 24px;}
-.team-panel-head span{font-family:var(--font-mono);font-size:.75rem;color:#ff8b93;}
-.team-panel-head h3{font-size:1.3rem;margin-top:4px;color:var(--white);}
-.team-row{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--paper-2);}
-.team-row:last-child{border-bottom:none;}
-.team-row .name{font-family:var(--font-display);font-weight:700;font-size:1.05rem;}
-.team-row .role{font-size:.82rem;color:var(--ink-soft);text-align:right;}
 
 /* ============ CATEGORIES ============ */
 .cat-list{border-top:1px solid var(--line-light,#D9D7CF);}
@@ -204,20 +176,22 @@ section{padding:86px 0;}
 .cat-tag{font-family:var(--font-mono);font-size:.72rem;border:1.5px solid var(--blue);color:var(--blue);padding:5px 12px;white-space:nowrap;}
 
 /* ============ CALENDAR ============ */
-.timeline{position:relative;padding-left:32px;border-left:2px solid var(--asphalt-3);}
+.timeline{position:relative;padding-left:32px;border-left:2px solid var(--paper-2);}
 .tl-item{position:relative;padding-bottom:34px;}
 .tl-item:last-child{padding-bottom:0;}
-.tl-dot{position:absolute;left:-41px;top:2px;width:18px;height:18px;background:var(--asphalt);border:3px solid var(--chrome);}
+.tl-dot{position:absolute;left:-41px;top:2px;width:18px;height:18px;background:var(--white);border:3px solid #C9C7BE;}
 .tl-item.done .tl-dot{background:var(--blue);border-color:var(--blue);}
-.tl-item.next .tl-dot{background:var(--red);border-color:var(--red);box-shadow:0 0 0 5px rgba(200,30,44,.25);}
+.tl-item.next .tl-dot{background:var(--red);border-color:var(--red);box-shadow:0 0 0 5px rgba(200,30,44,.15);}
 .tl-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
-.tl-head .fecha-n{font-family:var(--font-mono);color:#ff8b93;font-size:.85rem;}
-.tl-head h4{color:var(--white);font-size:1.15rem;}
-.tl-item p{color:#B7BAC0;margin-top:4px;font-size:.92rem;}
+.tl-head .fecha-n{font-family:var(--font-mono);color:var(--red);font-size:.85rem;}
+.tl-head h4{color:var(--ink);font-size:1.15rem;}
+.tl-item p{color:var(--ink-soft);margin-top:4px;font-size:.92rem;}
 .status-pill{font-family:var(--font-mono);font-size:.68rem;padding:3px 10px;letter-spacing:.4px;}
 .status-pill.done{background:var(--blue);color:var(--white);}
 .status-pill.next{background:var(--red);color:var(--white);}
-.status-pill.tbd{border:1px solid #666;color:#999;}
+.status-pill.tbd{border:1px solid #C9C7BE;color:var(--ink-soft);}
+.tl-photos{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+.tl-photos img{width:64px;height:64px;object-fit:cover;border:1px solid var(--paper-2);}
 
 /* ============ STANDINGS ============ */
 .board{background:var(--asphalt-2);border:1px solid var(--line);}
@@ -256,22 +230,18 @@ table.timing td.pts{font-family:var(--font-mono);text-align:right;font-weight:70
 
 /* ============ RAFFLE ============ */
 .raffle{
-  background:linear-gradient(100deg,var(--blue-deep) 0%,var(--blue) 45%, var(--red-deep) 100%);
-  color:var(--white);
-  position:relative;overflow:hidden;
-}
-.raffle::before{
-  content:"";position:absolute;inset:0;
-  background-image:repeating-linear-gradient(-45deg,rgba(0,0,0,.12) 0 20px, transparent 20px 40px);
+  background:var(--white);
+  border-top:4px solid var(--blue);
+  border-bottom:4px solid var(--red);
 }
 .raffle-inner{position:relative;z-index:1;display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;}
-.raffle h2{font-size:clamp(1.9rem,3.6vw,2.7rem);color:var(--white);}
-.raffle p{color:#EAF0F8;margin-top:14px;font-size:1.05rem;max-width:52ch;}
-.raffle-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);padding:28px;}
-.raffle-card .price{font-family:var(--font-mono);font-size:2.1rem;font-weight:700;}
-.raffle-card .price span{font-size:1rem;font-weight:500;}
+.raffle h2{font-size:clamp(1.9rem,3.6vw,2.7rem);color:var(--ink);}
+.raffle p{color:var(--ink-soft);margin-top:14px;font-size:1.05rem;max-width:52ch;}
+.raffle-card{background:var(--paper);border:1px solid var(--paper-2);padding:28px;}
+.raffle-card .price{font-family:var(--font-mono);font-size:2.1rem;font-weight:700;color:var(--ink);}
+.raffle-card .price span{font-size:1rem;font-weight:500;color:var(--ink-soft);}
 .raffle-card ul{list-style:none;padding:0;margin:16px 0 22px;}
-.raffle-card li{padding:6px 0;border-top:1px solid rgba(255,255,255,.2);font-size:.92rem;}
+.raffle-card li{padding:6px 0;border-top:1px solid var(--paper-2);font-size:.92rem;color:var(--ink-soft);}
 .raffle-card li:first-child{border-top:none;}
 
 /* ============ FORMS ============ */
@@ -311,26 +281,22 @@ table.timing td.pts{font-family:var(--font-mono);text-align:right;font-weight:70
 .logo-slot.is-real img{max-width:100%;max-height:100%;object-fit:contain;}
 
 /* ============ SOCIAL ============ */
-.social-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-.social-card{background:var(--asphalt-2);border:1px solid var(--line);}
-.social-card .post-media{aspect-ratio:1/1;background:linear-gradient(135deg,var(--asphalt-3),var(--asphalt));display:flex;align-items:center;justify-content:center;color:#5b5f68;font-family:var(--font-mono);font-size:.72rem;text-align:center;padding:14px;}
-.social-card .post-body{padding:16px 18px;}
-.social-card .handle{font-family:var(--font-mono);font-size:.72rem;color:#ff8b93;}
-.social-card p{color:#D7D9DD;font-size:.9rem;margin-top:8px;}
-.social-follow{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px;}
+.social-follow{display:flex;flex-wrap:wrap;gap:14px;margin-top:8px;}
 .chip{
   display:inline-flex;align-items:center;gap:8px;
   border:1.5px solid var(--line);padding:10px 18px;
   font-family:var(--font-mono);font-size:.82rem;color:var(--chrome);text-decoration:none;
 }
 .chip:hover{border-color:var(--red);color:var(--white);}
+.chip-light{border-color:#C9C7BE;color:var(--ink);}
+.chip-light:hover{border-color:var(--red);color:var(--red);}
 .yt-banner{
-  margin-top:40px;background:var(--red);color:var(--white);
+  margin-top:28px;background:var(--white);border:1.5px solid var(--paper-2);
   display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;
   padding:26px 32px;
 }
-.yt-banner h4{font-size:1.3rem;}
-.yt-banner p{color:#ffe1e3;margin-top:4px;font-size:.9rem;}
+.yt-banner h4{font-size:1.3rem;color:var(--ink);}
+.yt-banner p{color:var(--ink-soft);margin-top:4px;font-size:.9rem;}
 
 /* ============ FOOTER ============ */
 footer{background:#0F1014;color:#9EA1A8;padding:60px 0 26px;}
@@ -348,7 +314,7 @@ footer a:hover{color:var(--white);}
 @media (max-width:900px){
   .hero-inner{grid-template-columns:1fr;}
   .hero-diag{opacity:.5;width:100%;right:0;}
-  .about-grid,.two-col{grid-template-columns:1fr;gap:36px;}
+  .two-col{grid-template-columns:1fr;gap:36px;}
   .tier-grid{grid-template-columns:1fr;}
   .social-grid{grid-template-columns:1fr;}
   .form-grid{grid-template-columns:1fr;}
@@ -403,58 +369,26 @@ footer a:hover{color:var(--white);}
     </div>
     <div class="hero-panel">
       <h3>Próxima fecha</h3>
-      <p style="color:#C7C9CE;font-size:.9rem;">6ª fecha — Fase regular</p>
-      <div class="countdown" id="countdown">
-        <div><span class="num" id="cd-d">00</span><span class="lbl">Días</span></div>
-        <div><span class="num" id="cd-h">00</span><span class="lbl">Hs</span></div>
-        <div><span class="num" id="cd-m">00</span><span class="lbl">Min</span></div>
-      </div>
-      <div class="date-line">📍 Autódromo Provincial · 19 y 20 de septiembre</div>
+      <p class="mono" id="proximaFechaNumero" style="color:#ff8b93;font-weight:700;margin-top:8px;">6ª FECHA</p>
+      <p id="proximaFechaTexto" style="color:var(--white);font-size:1.15rem;font-weight:600;margin-top:2px;">19 y 20 de septiembre</p>
+      <div class="date-line" id="proximaFechaNota">Cierre de la fase regular — definición de copas.</div>
     </div>
-  </div>
-</div>
-
-<!-- ============ TICKER ============ -->
-<div class="ticker" role="marquee" aria-label="Novedades">
-  <div class="ticker-track" id="tickerTrack">
-    <span>6ª FECHA · 19 Y 20 DE SEPTIEMBRE</span>
-    <span>INSCRIPCIONES ABIERTAS PARA TODAS LAS CATEGORÍAS</span>
-    <span>RIFA SOLIDARIA KPS 2026 — SORTEO EN LA 7ª FECHA</span>
-    <span>SEGUÍ LAS TRANSMISIONES EN VIVO POR YOUTUBE</span>
-    <span>6ª FECHA · 19 Y 20 DE SEPTIEMBRE</span>
-    <span>INSCRIPCIONES ABIERTAS PARA TODAS LAS CATEGORÍAS</span>
-    <span>RIFA SOLIDARIA KPS 2026 — SORTEO EN LA 7ª FECHA</span>
-    <span>SEGUÍ LAS TRANSMISIONES EN VIVO POR YOUTUBE</span>
   </div>
 </div>
 
 <!-- ============ SOBRE KPS ============ -->
-<section id="sobre">
-  <div class="wrap">
-    <div class="about-grid">
-      <div>
-        <span class="kicker">Quiénes somos</span>
-        <h2>Profesionalizar el karting, sin perder el espíritu de familia.</h2>
-        <div class="about-copy" style="margin-top:22px;">
-          <p><strong>Misión:</strong> trabajar la transparencia técnica de la participación, penalizando las actitudes que empañan este deporte, y fomentar con incentivos la mejora constante de pilotos y equipos.</p>
-          <p><strong>Visión:</strong> ser la competencia elegida por quienes buscan convertirse en pilotos de élite — una escuela para las categorías nacionales, con ambiente familiar y atractivos para participantes y visitantes.</p>
-        </div>
-        <ul class="values-list">
-          <li>Seriedad</li><li>Transparencia</li><li>Competitividad</li><li>Lealtad</li><li>Familiaridad</li>
-        </ul>
-      </div>
-      <div class="team-panel">
-        <div class="team-panel-head">
-          <span>ORGANIZACIÓN</span>
-          <h3>El equipo detrás de cada fecha</h3>
-        </div>
-        <div class="team-row"><span class="name">Lucas</span><span class="role">RRPP y Comercial</span></div>
-        <div class="team-row"><span class="name">Ángel</span><span class="role">Deportivo y Técnico</span></div>
-        <div class="team-row"><span class="name">Any</span><span class="role">Redes Sociales</span></div>
-        <div class="team-row"><span class="name">Luis</span><span class="role">Prensa y Locución</span></div>
-        <div class="team-row"><span class="name">Richard</span><span class="role">Fotografía</span></div>
-      </div>
-    </div>
+<section id="sobre" style="background:var(--white);">
+  <div class="wrap" style="max-width:760px;">
+    <span class="kicker">Quiénes somos</span>
+    <h2>Profesionalizar el karting, sin perder el espíritu de familia.</h2>
+    <p style="margin-top:16px;color:var(--ink-soft);font-size:1.05rem;">Trabajamos la transparencia técnica de la competencia y fomentamos la mejora constante de pilotos y equipos, con un ambiente familiar que sirve de escuela hacia las categorías nacionales.</p>
+    <ul class="values-list" style="margin-top:18px;">
+      <li>Seriedad</li><li>Transparencia</li><li>Competitividad</li><li>Lealtad</li><li>Familiaridad</li>
+    </ul>
+    <p style="margin-top:22px;font-size:.92rem;color:var(--ink-soft);">
+      <strong style="color:var(--ink);">Organización:</strong>
+      Lucas (RRPP y Comercial) · Ángel (Deportivo y Técnico) · Any (Redes Sociales) · Luis (Prensa y Locución) · Richard (Fotografía)
+    </p>
   </div>
 </section>
 
@@ -513,7 +447,7 @@ footer a:hover{color:var(--white);}
 </section>
 
 <!-- ============ CALENDARIO ============ -->
-<section id="calendario" class="dark-section">
+<section id="calendario" style="background:var(--paper);">
   <div class="wrap">
     <div class="section-head">
       <span class="kicker">Calendario 2026</span>
@@ -616,78 +550,41 @@ footer a:hover{color:var(--white);}
 <section id="rifa" class="raffle">
   <div class="wrap raffle-inner">
     <div>
-      <span class="kicker" style="color:#FFD9DC;">Rifa solidaria KPS</span>
+      <span class="kicker">Rifa solidaria KPS</span>
       <h2>Tu número apoya directo al desarrollo del karting santafesino.</h2>
       <p>Lo recaudado se destina a mejoras de seguridad en pista y al fondo de premios de las categorías formativas. Elegí tu número, pagá por transferencia y subí tu comprobante — todo desde la misma página.</p>
       <div class="hero-actions">
         <a href="rifa.html" class="btn btn-red">Elegir mi número de rifa</a>
-        <a href="#redes" class="btn btn-outline">Ver el sorteo en vivo</a>
+        <a href="#redes" class="btn btn-outline-dark">Ver el sorteo en vivo</a>
       </div>
     </div>
     <div class="raffle-card" id="raffleCard">
-      <span class="tname mono" style="color:#FFD9DC;">GRAN RIFA KPS</span>
+      <span class="tname mono" style="color:var(--red);">GRAN RIFA KPS</span>
       <div class="price">$10.000 <span>por número</span></div>
       <ul>
         <li>Tres sorteos: octubre, noviembre y diciembre</li>
         <li>Números del 0000 al 9999</li>
         <li>El sorteo final juega con todos los números vendidos</li>
       </ul>
-      <a href="rifa.html" class="btn btn-outline btn-block">Ver números disponibles</a>
+      <a href="rifa.html" class="btn btn-outline-dark btn-block">Ver números disponibles</a>
     </div>
   </div>
 </section>
 
 <!-- ============ INSCRIPCIÓN ============ -->
-<section id="inscripcion" style="background:var(--paper);">
+<section id="inscripcion" style="background:var(--white);">
   <div class="wrap">
     <div class="section-head">
       <span class="kicker">Inscripción de pilotos</span>
       <h2>Sumate al campeonato 2026.</h2>
-      <p>Completá tus datos, pagá la inscripción por transferencia y subí la referencia del pago. Tu lugar queda <strong>sujeto a confirmación del organizador</strong> una vez que verifiquemos el pago.</p>
+      <p>Completá tus datos, pagá la inscripción por transferencia y subí la referencia del pago. Tu lugar queda sujeto a confirmación del organizador.</p>
+      <a href="inscripcion.html" class="btn btn-red" style="margin-top:22px;">Inscribirme como piloto</a>
     </div>
-    <form class="form-shell" id="inscripcionForm">
-      <div class="form-grid" id="inscripcionFields">
-        <div class="field"><label for="i-nombre">Nombre y apellido</label><input id="i-nombre" name="Nombre y apellido" required></div>
-        <div class="field"><label for="i-dni">DNI</label><input id="i-dni" name="DNI" required></div>
-        <div class="field"><label for="i-nacimiento">Fecha de nacimiento</label><input type="date" id="i-nacimiento" name="Fecha de nacimiento" required></div>
-        <div class="field"><label for="i-localidad">Localidad</label><input id="i-localidad" name="Localidad" required></div>
-        <div class="field"><label for="i-categoria">Categoría</label>
-          <select id="i-categoria" name="Categoría" required>
-            <option value="">Elegí una categoría</option>
-            <option>Escuelita Light</option><option>Cadete</option><option>Menor</option>
-            <option>Standard</option><option>Master</option><option>Sudam Junior</option>
-            <option>Sudam Senior</option><option>125cc 2T Nacional</option><option>125cc 2T Internacional</option>
-          </select>
-        </div>
-        <div class="field"><label for="i-equipo">Equipo (opcional)</label><input id="i-equipo" name="Equipo"></div>
-        <div class="field"><label for="i-tel">Teléfono / WhatsApp</label><input id="i-tel" name="Teléfono" type="tel" required></div>
-        <div class="field"><label for="i-mail">E-mail</label><input id="i-mail" name="E-mail" type="email" required></div>
-        <div class="field full"><label for="i-obs">Observaciones</label><textarea id="i-obs" name="Observaciones" placeholder="Kart propio, número anterior de competencia, etc."></textarea></div>
-      </div>
-
-      <div style="background:var(--asphalt);color:#fff;padding:22px 24px;margin:8px 0 22px;">
-        <span class="kicker" style="color:#ff8b93;">Cómo pagar la inscripción</span>
-        <p style="color:#C7C9CE;font-size:.9rem;margin-top:6px;">Transferí el monto de inscripción a este alias de Mercado Pago:</p>
-        <div class="mono" id="inscripcionAlias" style="font-size:1.3rem;font-weight:700;margin:10px 0;background:rgba(255,255,255,.1);padding:10px 14px;text-align:center;">Kps2026</div>
-        <div class="field" style="margin-top:16px;">
-          <label style="color:#C7C9CE;">Número de comprobante / referencia</label>
-          <input id="i-payref" placeholder="Ej: N° de operación 000123456" required>
-        </div>
-        <label style="display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:#C7C9CE;margin-top:10px;">
-          <input type="checkbox" id="i-payconfirm" style="margin-top:3px;" required>
-          Confirmo que ya realicé la transferencia por el monto de inscripción correspondiente.
-        </label>
-      </div>
-
-      <button type="submit" class="btn btn-red">Enviar inscripción</button>
-      <div class="confirm-box" id="inscripcionConfirm"></div>
-      <p class="form-note">Al inscribirte aceptás el reglamento deportivo y técnico vigente de KPS.</p>
-    </form>
   </div>
 </section>
 
 <!-- ============ SPONSORS ============ -->
-<section id="sponsors" class="dark-section">
+<section id="sponsors" style="background:var(--white);">
   <div class="wrap">
     <div class="section-head">
       <span class="kicker">Sponsors</span>
@@ -743,48 +640,24 @@ footer a:hover{color:var(--white);}
 </section>
 
 <!-- ============ REDES SOCIALES ============ -->
-<section id="redes" style="background:var(--asphalt-2);">
+<section id="redes" style="background:var(--paper);">
   <div class="wrap">
     <div class="section-head">
-      <span class="kicker" style="color:var(--red);">Comunidad</span>
-      <h2 style="color:var(--white);">Lo último de KPS en redes.</h2>
-      <p style="color:#C7C9CE;">Seguinos para no perderte fotos de boxes, resultados en vivo y el resumen de cada fecha.</p>
+      <span class="kicker">Comunidad</span>
+      <h2>Seguí a KPS en redes.</h2>
+      <p>Fotos de boxes, resultados en vivo y el resumen de cada fecha.</p>
     </div>
-    <div class="social-grid">
-      <div class="social-card">
-        <div class="post-media">Foto de podio · última fecha</div>
-        <div class="post-body">
-          <span class="handle">@kartingprovincialsantafesino</span>
-          <p>Así se vivió la 5ª fecha en boxes — gracias a todos los que se acercaron a la familia KPS.</p>
-        </div>
-      </div>
-      <div class="social-card">
-        <div class="post-media">Reel · vuelta rápida</div>
-        <div class="post-body">
-          <span class="handle">@KPSoficial</span>
-          <p>La vuelta más rápida de la categoría 125cc 2T Internacional, cronometrada en vivo.</p>
-        </div>
-      </div>
-      <div class="social-card">
-        <div class="post-media">Anuncio · próxima fecha</div>
-        <div class="post-body">
-          <span class="handle">@KartingProvincialSantafesino</span>
-          <p>Ya están abiertas las inscripciones para la 6ª fecha. Cupos limitados por categoría.</p>
-        </div>
-      </div>
-    </div>
-    <p class="form-note" style="color:#8b8e95;margin-top:16px;">Vista previa ilustrativa — para mostrar las publicaciones reales acá, hay que conectar este bloque a la API oficial de Instagram/Facebook (Meta Graph API).</p>
     <div class="social-follow">
-      <a class="chip" id="socialInstagram" href="https://instagram.com/kartingprovincialsantafesino" target="_blank" rel="noopener">Instagram · @kartingprovincialsantafesino</a>
-      <a class="chip" id="socialFacebook" href="https://facebook.com/KPSoficial" target="_blank" rel="noopener">Facebook · KPSoficial</a>
-      <a class="chip" id="socialX" href="https://x.com/KPSoficial" target="_blank" rel="noopener">X · KPSoficial</a>
+      <a class="chip chip-light" id="socialInstagram" href="https://instagram.com/kartingprovincialsantafesino" target="_blank" rel="noopener">Instagram · @kartingprovincialsantafesino</a>
+      <a class="chip chip-light" id="socialFacebook" href="https://facebook.com/KPSoficial" target="_blank" rel="noopener">Facebook · KPSoficial</a>
+      <a class="chip chip-light" id="socialX" href="https://x.com/KPSoficial" target="_blank" rel="noopener">X · KPSoficial</a>
     </div>
     <div class="yt-banner">
       <div>
         <h4>Mirá las carreras en vivo por YouTube</h4>
         <p>Transmitimos cada fecha completa, con entrevistas desde la sala de enfriamiento.</p>
       </div>
-      <a id="socialYoutube" href="https://www.youtube.com/@KPSOficial" target="_blank" rel="noopener" class="btn" style="background:var(--white);color:var(--red);">Suscribirme al canal</a>
+      <a id="socialYoutube" href="https://www.youtube.com/@KPSOficial" target="_blank" rel="noopener" class="btn btn-red">Suscribirme al canal</a>
     </div>
   </div>
 </section>
@@ -976,12 +849,20 @@ function kpsRenderCalendar(rows){
   const html = rows.map(r => {
     const cls = kpsEstadoClase(r.estado);
     const nota = r.nota ? `<p>${kpsEsc(r.nota)}</p>` : '';
+    const fotos = (r.fotos || '').split(/[|\n]/).map(f => f.trim()).filter(Boolean);
+    const fotosHtml = fotos.length
+      ? `<div class="tl-photos">${fotos.slice(0,6).map(f => `<a href="${kpsEsc(f)}" target="_blank" rel="noopener"><img src="${kpsEsc(f)}" alt="Foto de ${kpsEsc(r.numero)}"></a>`).join('')}</div>`
+      : '';
     return `<div class="tl-item ${cls}"><div class="tl-dot"></div>
       <div class="tl-head"><span class="fecha-n">${kpsEsc(r.numero)}</span><h4>${kpsEsc(r.fechas)}</h4><span class="status-pill ${cls}">${kpsEsc(r.estado)}</span></div>
       ${nota}
+      ${fotosHtml}
     </div>`;
   }).join('');
   document.getElementById('calendarTimeline').innerHTML = html;
+  // Buscar la fecha marcada como "Próxima" para el panel de la portada
+  const proxima = rows.find(r => kpsEstadoClase(r.estado) === 'next');
+  kpsApplyProximaFecha(proxima);
 }
 
 async function kpsLoadCalendar(){
@@ -1083,64 +964,6 @@ async function kpsLoadStandings(){
 }
 document.addEventListener('DOMContentLoaded', kpsLoadStandings);
 
-/**
- * ============ CAMPOS DEL FORMULARIO DE INSCRIPCIÓN ============
- * Pestaña "inscripcion_campos": columnas  orden | etiqueta | tipo | opciones | requerido
- * tipo: texto | numero | fecha | telefono | email | seleccion | parrafo
- * opciones: solo para "seleccion", separadas por | (ej. Standard|Master|Cadete)
- * requerido: SI o NO
- */
-const KPS_INSCRIPCION_CAMPOS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ8gnwyPPA6Ng6s1sIVQ8SRRbeG_dUVZhQrXZtGMlO8pYjo3sviyCQ-Peg7UYbFBRJJtXJTUg1KAi_i/pub?gid=924173536&single=true&output=csv';
-
-function kpsBuildInscripcionField(row, idx){
-  const id = 'campo-' + idx;
-  const tipo = String(row.tipo || 'texto').trim().toLowerCase();
-  const etiqueta = row.etiqueta || ('Campo ' + (idx + 1));
-  const required = row.requerido === true || String(row.requerido || '').trim().toUpperCase() === 'SI';
-  const req = required ? 'required' : '';
-  let inputHtml;
-  if(tipo === 'seleccion'){
-    const opts = (row.opciones || '').split('|').filter(Boolean)
-      .map(o => `<option>${kpsEsc(o.trim())}</option>`).join('');
-    inputHtml = `<select id="${id}" name="${kpsEsc(etiqueta)}" ${req}><option value="">Elegí una opción</option>${opts}</select>`;
-  } else if(tipo === 'parrafo'){
-    inputHtml = `<textarea id="${id}" name="${kpsEsc(etiqueta)}" ${req}></textarea>`;
-  } else {
-    const typeMap = { numero: 'number', fecha: 'date', telefono: 'tel', email: 'email' };
-    const htmlType = typeMap[tipo] || 'text';
-    inputHtml = `<input type="${htmlType}" id="${id}" name="${kpsEsc(etiqueta)}" ${req}>`;
-  }
-  const fullClass = tipo === 'parrafo' ? ' full' : '';
-  return `<div class="field${fullClass}"><label for="${id}">${kpsEsc(etiqueta)}</label>${inputHtml}</div>`;
-}
-
-async function kpsLoadInscripcionFields(){
-  const site = await getKpsSiteContent();
-  if(Array.isArray(site.inscripcion_campos) && site.inscripcion_campos.length){
-    const rows = site.inscripcion_campos.filter(r => r.etiqueta)
-      .sort((a, b) => parseInt(a.orden || '99') - parseInt(b.orden || '99'));
-    if(rows.length){
-      document.getElementById('inscripcionFields').innerHTML =
-        rows.map((r, i) => kpsBuildInscripcionField(r, i)).join('');
-      return;
-    }
-  }
-  if(!KPS_INSCRIPCION_CAMPOS_CSV_URL || KPS_INSCRIPCION_CAMPOS_CSV_URL.includes('PEGA_AQUI')) return;
-  try{
-    const res = await fetch(KPS_INSCRIPCION_CAMPOS_CSV_URL);
-    if(!res.ok) throw new Error('No se pudo leer la planilla de campos de inscripción');
-    const parsed = Papa.parse(await res.text(), { header: true, skipEmptyLines: true });
-    const rows = parsed.data.filter(r => r.etiqueta)
-      .sort((a, b) => parseInt(a.orden || '99') - parseInt(b.orden || '99'));
-    if(!rows.length) return;
-    document.getElementById('inscripcionFields').innerHTML =
-      rows.map((r, i) => kpsBuildInscripcionField(r, i)).join('');
-  }catch(err){
-    console.error('KPS: no se pudieron cargar los campos de inscripción desde Google Sheets.', err);
-  }
-}
-document.addEventListener('DOMContentLoaded', kpsLoadInscripcionFields);
-
 // ---- menú móvil ----
 const burger = document.getElementById('burgerBtn');
 const navLinks = document.getElementById('navLinks');
@@ -1153,20 +976,27 @@ navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
   burger.setAttribute('aria-expanded', 'false');
 }));
 
-// ---- countdown a la próxima fecha (19 sep 2026, 00:00) ----
-const target = new Date('2026-09-19T09:00:00-03:00').getTime();
-function tickCountdown(){
-  const now = Date.now();
-  const diff = Math.max(0, target - now);
-  const d = Math.floor(diff / 86400000);
-  const h = Math.floor((diff % 86400000) / 3600000);
-  const m = Math.floor((diff % 3600000) / 60000);
-  document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
-  document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
-  document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+// ---- panel de "próxima fecha": se completa solo con el calendario real (ver kpsRenderCalendar) ----
+function kpsApplyProximaFecha(row){
+  const numEl = document.getElementById('proximaFechaNumero');
+  const txtEl = document.getElementById('proximaFechaTexto');
+  const notaEl = document.getElementById('proximaFechaNota');
+  if(!numEl || !txtEl) return;
+  if(!row){
+    numEl.textContent = 'Por confirmar';
+    txtEl.textContent = 'Todavía no hay una fecha marcada como "Próxima" en el calendario.';
+    notaEl.style.display = 'none';
+    return;
+  }
+  numEl.textContent = row.numero || '';
+  txtEl.textContent = row.fechas || '';
+  if(row.nota){
+    notaEl.textContent = row.nota;
+    notaEl.style.display = 'block';
+  } else {
+    notaEl.style.display = 'none';
+  }
 }
-tickCountdown();
-setInterval(tickCountdown, 30000);
 
 // ---- tabla de puntuaciones ----
 let standings = {
@@ -1210,7 +1040,6 @@ document.getElementById('boardTabs').addEventListener('click', e => {
 });
 renderBoard('elite');
 
-// ---- alias de pago de inscripción (viene del panel de administrador si está configurado) ----
 // ---- contenido general del sitio (marca, hero, reglamento, redes, footer) ----
 async function kpsLoadGeneralContent(){
   const site = await getKpsSiteContent();
@@ -1246,62 +1075,6 @@ async function kpsLoadGeneralContent(){
   setText('footerPhone2', site.phone2);
 }
 document.addEventListener('DOMContentLoaded', kpsLoadGeneralContent);
-
-async function kpsLoadInscripcionAlias(){
-  const site = await getKpsSiteContent();
-  const el = document.getElementById('inscripcionAlias');
-  if(el && site.alias_mp) el.textContent = site.alias_mp;
-}
-document.addEventListener('DOMContentLoaded', kpsLoadInscripcionAlias);
-
-// ---- formulario de inscripción (se guarda en Firebase, queda "pendiente" hasta que el organizador lo confirme) ----
-function kpsGenInscripcionId(){
-  return 'INSC-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
-}
-
-document.getElementById('inscripcionForm')?.addEventListener('submit', async (ev) => {
-  ev.preventDefault();
-  const form = ev.target;
-  const box = document.getElementById('inscripcionConfirm');
-  const errorMsg = 'Hubo un problema al enviar la inscripción. Probá de nuevo o escribinos directo por WhatsApp.';
-  const submitBtn = form.querySelector('button[type="submit"]');
-
-  const payRef = document.getElementById('i-payref')?.value.trim();
-  const payConfirmed = document.getElementById('i-payconfirm')?.checked;
-  if(!payRef || !payConfirmed){
-    box.textContent = 'Completá el número de comprobante y confirmá que ya transferiste el pago.';
-    box.classList.add('show');
-    return;
-  }
-
-  const datos = {};
-  form.querySelectorAll('#inscripcionFields [name]').forEach(el => { datos[el.name] = el.value; });
-
-  const registro = {
-    id: kpsGenInscripcionId(),
-    datos,
-    payReference: payRef,
-    payConfirmed: true,
-    status: 'pendiente',
-    createdAt: Date.now()
-  };
-
-  try{
-    const db = getKpsDb();
-    if(!db) throw new Error('No se pudo conectar con la base de datos.');
-    submitBtn.disabled = true; submitBtn.textContent = 'Enviando…';
-    await db.collection('inscripciones').doc(registro.id).set(registro);
-    box.textContent = '¡Listo! Tu inscripción quedó registrada como pendiente. La confirmamos apenas verifiquemos el pago, y te contactamos por WhatsApp o e-mail.';
-    box.classList.add('show');
-    form.reset();
-  }catch(err){
-    console.error('KPS: no se pudo guardar la inscripción.', err);
-    box.textContent = errorMsg;
-    box.classList.add('show');
-  }finally{
-    submitBtn.disabled = false; submitBtn.textContent = 'Enviar inscripción';
-  }
-});
 </script>
 </body>
 </html>

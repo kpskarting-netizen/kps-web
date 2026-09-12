@@ -116,15 +116,15 @@ function defaultData(){
       {orden:"08", nombre:"125cc 2T Internacional", descripcion:"La categoría reina del campeonato — máxima potencia y el nivel más competitivo de KPS.", etiqueta:"Elite"}
     ],
     calendario: [
-      {numero:"1ª FECHA", fechas:"25 y 26 de abril", estado:"Corrida", nota:"Apertura de temporada."},
-      {numero:"2ª FECHA", fechas:"23 y 24 de mayo", estado:"Corrida", nota:""},
-      {numero:"3ª FECHA", fechas:"20 y 21 de junio", estado:"Corrida", nota:""},
-      {numero:"4ª FECHA", fechas:"18 y 19 de julio", estado:"Corrida", nota:""},
-      {numero:"5ª FECHA", fechas:"22 y 23 de agosto", estado:"Corrida", nota:""},
-      {numero:"6ª FECHA", fechas:"19 y 20 de septiembre", estado:"Próxima", nota:"Cierre de la fase regular — definición de copas."},
-      {numero:"7ª FECHA", fechas:"17 y 18 de octubre", estado:"A disputarse", nota:"Sorteo de la Rifa Solidaria KPS."},
-      {numero:"8ª FECHA", fechas:"21 y 22 de noviembre", estado:"A disputarse", nota:""},
-      {numero:"9ª FECHA", fechas:"A definir", estado:"A definir", nota:"Fecha de cierre de temporada."}
+      {numero:"1ª FECHA", fechas:"25 y 26 de abril", estado:"Corrida", nota:"Apertura de temporada.", fotos:""},
+      {numero:"2ª FECHA", fechas:"23 y 24 de mayo", estado:"Corrida", nota:"", fotos:""},
+      {numero:"3ª FECHA", fechas:"20 y 21 de junio", estado:"Corrida", nota:"", fotos:""},
+      {numero:"4ª FECHA", fechas:"18 y 19 de julio", estado:"Corrida", nota:"", fotos:""},
+      {numero:"5ª FECHA", fechas:"22 y 23 de agosto", estado:"Corrida", nota:"", fotos:""},
+      {numero:"6ª FECHA", fechas:"19 y 20 de septiembre", estado:"Próxima", nota:"Cierre de la fase regular — definición de copas.", fotos:""},
+      {numero:"7ª FECHA", fechas:"17 y 18 de octubre", estado:"A disputarse", nota:"Sorteo de la Rifa Solidaria KPS.", fotos:""},
+      {numero:"8ª FECHA", fechas:"21 y 22 de noviembre", estado:"A disputarse", nota:"", fotos:""},
+      {numero:"9ª FECHA", fechas:"A definir", estado:"A definir", nota:"Fecha de cierre de temporada.", fotos:""}
     ],
     puntuaciones: [
       {categoria:"125cc 2T Internacional", posicion:"1", piloto:"Franco Belliboni", equipo:"Rotax Team", localidad:"Santa Fe", puntos:"198"},
@@ -321,10 +321,14 @@ function renderCalendarioTab(){
         </div>
       </div>
       <div class="field"><label>Nota (opcional)</label><input data-f="calendario:${i}:nota" value="${esc(c.nota)}"></div>
+      <div class="field">
+        <label>Fotos de esta fecha (opcional) — pegá los links de Google Drive, uno por línea</label>
+        <textarea data-f="calendario:${i}:fotos" placeholder="https://drive.google.com/uc?export=view&id=...">${esc(c.fotos)}</textarea>
+      </div>
     </div>`).join("");
   return `
     <h2 class="section-title">Calendario</h2>
-    <p class="section-sub">El punto de la línea de tiempo cambia de color según el estado que elijas.</p>
+    <p class="section-sub">El punto de la línea de tiempo cambia de color según el estado que elijas. Para las fotos, subilas a Google Drive, "Cualquier usuario con el enlace", y armá el link como <span class="mono">https://drive.google.com/uc?export=view&amp;id=TU_CODIGO</span> (mismo truco que usamos para el logo).</p>
     ${cards}
     <button class="add-btn" data-add="calendario">+ Agregar fecha</button>`;
 }
@@ -623,7 +627,7 @@ function attachShellEvents(){
       const coll = btn.dataset.add;
       const blanks = {
         categorias: {orden:"", nombre:"", descripcion:"", etiqueta:""},
-        calendario: {numero:"", fechas:"", estado:"A definir", nota:""},
+        calendario: {numero:"", fechas:"", estado:"A definir", nota:"", fotos:""},
         sponsors: {nombre:"", logo_url:"", link:"", activo:true},
         inscripcion_campos: {orden:String(state.data.inscripcion_campos.length+1), etiqueta:"", tipo:"texto", opciones:"", requerido:false}
       };
