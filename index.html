@@ -377,6 +377,15 @@ footer a:hover{color:var(--white);}
 </div>
 
 <!-- ============ SOBRE KPS ============ -->
+<section id="aviso" style="background:var(--paper);display:none;">
+  <div class="wrap" style="max-width:760px;">
+    <div style="border-left:4px solid var(--red);padding:24px 28px;background:var(--white);">
+      <h3 id="avisoTitulo" style="font-size:1.3rem;"></h3>
+      <p id="avisoTexto" style="margin-top:10px;color:var(--ink-soft);white-space:pre-line;"></p>
+    </div>
+  </div>
+</section>
+
 <section id="sobre" style="background:var(--white);">
   <div class="wrap" style="max-width:760px;">
     <span class="kicker">Quiénes somos</span>
@@ -506,7 +515,7 @@ footer a:hover{color:var(--white);}
       </div>
       <table class="timing">
         <thead>
-          <tr><th>Pos</th><th>Piloto</th><th>Equipo</th><th>Localidad</th><th style="text-align:right;">Puntos</th></tr>
+          <tr><th>Pos</th><th>Piloto</th><th>Nº Kart</th><th style="text-align:right;">Puntos</th></tr>
         </thead>
         <tbody id="boardBody"></tbody>
       </table>
@@ -934,7 +943,7 @@ function kpsApplyStandingsRows(rowsArray){
     if(!r.categoria || !r.piloto) return;
     const cat = String(r.categoria).trim();
     if(!grouped[cat]) grouped[cat] = [];
-    grouped[cat].push([r.posicion, r.piloto, r.equipo, r.localidad, r.puntos]);
+    grouped[cat].push([r.posicion, r.piloto, r.numero_kart, r.puntos]);
   });
   const cats = Object.keys(grouped);
   if(!cats.length) return false;
@@ -1001,25 +1010,25 @@ function kpsApplyProximaFecha(row){
 // ---- tabla de puntuaciones ----
 let standings = {
   elite: [
-    ['1','Franco Belliboni','Rotax Team','Santa Fe','198'],
-    ['2','Ignacio Weiss','KPS Racing','Rosario','187'],
-    ['3','Tomás Guiraldes','Motor Sur','Córdoba','179'],
-    ['4','Bruno Ferreyra','Independiente','Rafaela','162'],
-    ['5','Nahuel Prieto','Escudería Litoral','Paraná','150'],
+    ['1','Franco Belliboni','12','198'],
+    ['2','Ignacio Weiss','7','187'],
+    ['3','Tomás Guiraldes','23','179'],
+    ['4','Bruno Ferreyra','4','162'],
+    ['5','Nahuel Prieto','31','150'],
   ],
   standard: [
-    ['1','Lucía Farías','KPS Racing','Santo Tomé','171'],
-    ['2','Mateo Bianchi','Motor Sur','Santa Fe','168'],
-    ['3','Agustín Roldán','Independiente','Esperanza','155'],
-    ['4','Camila Sosa','Escudería Litoral','Rosario','140'],
-    ['5','Fermín Ayala','Rotax Team','Rafaela','133'],
+    ['1','Lucía Farías','9','171'],
+    ['2','Mateo Bianchi','15','168'],
+    ['3','Agustín Roldán','2','155'],
+    ['4','Camila Sosa','18','140'],
+    ['5','Fermín Ayala','6','133'],
   ],
   master: [
-    ['1','Diego Fontana','Independiente','Santa Fe','160'],
-    ['2','Marcelo Ibarra','Motor Sur','Córdoba','154'],
-    ['3','Sergio Villalba','KPS Racing','Rosario','149'],
-    ['4','Pablo Ortigoza','Escudería Litoral','Rafaela','131'],
-    ['5','Hernán Duarte','Rotax Team','Paraná','120'],
+    ['1','Diego Fontana','11','160'],
+    ['2','Marcelo Ibarra','3','154'],
+    ['3','Sergio Villalba','27','149'],
+    ['4','Pablo Ortigoza','8','131'],
+    ['5','Hernán Duarte','19','120'],
   ]
 };
 function renderBoard(cat){
@@ -1028,7 +1037,7 @@ function renderBoard(cat){
   standings[cat].forEach(row => {
     const tr = document.createElement('tr');
     tr.className = row[0] === '1' ? 'p1' : row[0] === '2' ? 'p2' : row[0] === '3' ? 'p3' : '';
-    tr.innerHTML = `<td class="pos">${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}</td><td class="pts">${row[4]}</td>`;
+    tr.innerHTML = `<td class="pos">${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td><td class="pts">${row[3]}</td>`;
     body.appendChild(tr);
   });
 }
@@ -1054,6 +1063,12 @@ async function kpsLoadGeneralContent(){
   setText('heroEyebrow', site.hero_eyebrow);
   setHtml('heroTitle', site.hero_title);
   setText('heroLead', site.hero_lead);
+
+  if(site.info_texto){
+    document.getElementById('aviso').style.display = 'block';
+    setText('avisoTitulo', site.info_titulo || 'Información importante');
+    setText('avisoTexto', site.info_texto);
+  }
 
   if(site.reglamento_url){
     const btn = document.getElementById('reglamentoBtn');
