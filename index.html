@@ -190,8 +190,9 @@ section{padding:86px 0;}
 .status-pill.done{background:var(--blue);color:var(--white);}
 .status-pill.next{background:var(--red);color:var(--white);}
 .status-pill.tbd{border:1px solid #C9C7BE;color:var(--ink-soft);}
-.tl-photos{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
-.tl-photos img{width:64px;height:64px;object-fit:cover;border:1px solid var(--paper-2);}
+.tl-photo-loop{display:block;width:130px;height:96px;margin-top:12px;border:1px solid var(--paper-2);overflow:hidden;position:relative;background:var(--paper-2);}
+.tl-photo-loop img{width:100%;height:100%;object-fit:cover;display:block;}
+.tl-photo-loop .hint{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-family:var(--font-mono);font-size:.6rem;text-align:center;padding:3px 0;}
 
 /* ============ STANDINGS ============ */
 .board{background:var(--asphalt-2);border:1px solid var(--line);}
@@ -376,7 +377,8 @@ footer a:hover{color:var(--white);}
   </div>
 </div>
 
-<!-- ============ SOBRE KPS ============ -->
+<div id="blocksContainer">
+<!-- ============ AVISO ============ -->
 <section id="aviso" style="background:var(--paper);display:none;">
   <div class="wrap" style="max-width:760px;">
     <div style="border-left:4px solid var(--red);padding:24px 28px;background:var(--white);">
@@ -670,6 +672,7 @@ footer a:hover{color:var(--white);}
     </div>
   </div>
 </section>
+</div>
 
 <!-- ============ CONTACTO ============ -->
 <footer id="contacto">
@@ -855,13 +858,19 @@ function kpsEstadoClase(estado){
 }
 
 function kpsRenderCalendar(rows){
-  const html = rows.map(r => {
+  const html = rows.map((r, idx) => {
     const cls = kpsEstadoClase(r.estado);
     const nota = r.nota ? `<p>${kpsEsc(r.nota)}</p>` : '';
     const fotos = (r.fotos || '').split(/[|\n]/).map(f => f.trim()).filter(Boolean);
-    const fotosHtml = fotos.length
-      ? `<div class="tl-photos">${fotos.slice(0,6).map(f => `<a href="${kpsEsc(f)}" target="_blank" rel="noopener"><img src="${kpsEsc(f)}" alt="Foto de ${kpsEsc(r.numero)}"></a>`).join('')}</div>`
-      : '';
+    let fotosHtml = '';
+    if(fotos.length){
+      const destino = r.carpeta_drive || fotos[0];
+      const fotosAttr = kpsEsc(JSON.stringify(fotos));
+      fotosHtml = `<a class="tl-photo-loop" href="${kpsEsc(destino)}" target="_blank" rel="noopener" data-fotos='${fotosAttr}'>
+        <img src="${kpsEsc(fotos[0])}" alt="Fotos de ${kpsEsc(r.numero)}">
+        ${r.carpeta_drive ? '<span class="hint">Ver todas en Drive</span>' : ''}
+      </a>`;
+    }
     return `<div class="tl-item ${cls}"><div class="tl-dot"></div>
       <div class="tl-head"><span class="fecha-n">${kpsEsc(r.numero)}</span><h4>${kpsEsc(r.fechas)}</h4><span class="status-pill ${cls}">${kpsEsc(r.estado)}</span></div>
       ${nota}
@@ -869,9 +878,25 @@ function kpsRenderCalendar(rows){
     </div>`;
   }).join('');
   document.getElementById('calendarTimeline').innerHTML = html;
+  kpsStartPhotoLoops();
   // Buscar la fecha marcada como "Próxima" para el panel de la portada
   const proxima = rows.find(r => kpsEstadoClase(r.estado) === 'next');
   kpsApplyProximaFecha(proxima);
+}
+
+// ---- hace que cada loop de fotos del calendario vaya rotando solo ----
+function kpsStartPhotoLoops(){
+  document.querySelectorAll('.tl-photo-loop[data-fotos]').forEach(el => {
+    let fotos;
+    try{ fotos = JSON.parse(el.dataset.fotos); }catch(e){ return; }
+    if(!Array.isArray(fotos) || fotos.length < 2) return;
+    let i = 0;
+    const img = el.querySelector('img');
+    setInterval(() => {
+      i = (i + 1) % fotos.length;
+      img.src = fotos[i];
+    }, 2500);
+  });
 }
 
 async function kpsLoadCalendar(){
@@ -1088,8 +1113,32 @@ async function kpsLoadGeneralContent(){
   setHref('footerFacebook', site.social_facebook);
   setText('footerPhone1', site.phone1);
   setText('footerPhone2', site.phone2);
+
+  await kpsApplyBlockOrder(site);
 }
 document.addEventListener('DOMContentLoaded', kpsLoadGeneralContent);
+
+// ---- orden y visibilidad de bloques (se define desde admin.html) ----
+async function kpsApplyBlockOrder(site){
+  const container = document.getElementById('blocksContainer');
+  if(!container) return;
+
+  // El bloque de aviso se oculta si no hay texto cargado, o si además lo desactivaron a mano.
+  const avisoEl = document.getElementById('aviso');
+  if(avisoEl && !site.info_texto) avisoEl.style.display = 'none';
+
+  if(!Array.isArray(site.blocks) || !site.blocks.length) return;
+  site.blocks.forEach(b => {
+    const el = document.getElementById(b.key);
+    if(!el) return;
+    if(b.visible === false){
+      el.style.display = 'none';
+    } else if(b.key !== 'aviso' || site.info_texto){
+      el.style.display = '';
+    }
+    container.appendChild(el);
+  });
+}
 </script>
 </body>
 </html>

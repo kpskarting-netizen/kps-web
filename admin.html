@@ -94,6 +94,18 @@ function defaultData(){
   return {
     header_logo: "",
     alias_mp: "Kps2026",
+    blocks: [
+      {key:"aviso", label:"Aviso / información libre", visible:true},
+      {key:"sobre", label:"Sobre KPS", visible:true},
+      {key:"campeonato", label:"Categorías", visible:true},
+      {key:"calendario", label:"Calendario", visible:true},
+      {key:"puntuaciones", label:"Puntuaciones", visible:true},
+      {key:"reglamento", label:"Reglamento y premios", visible:true},
+      {key:"rifa", label:"Rifa solidaria", visible:true},
+      {key:"inscripcion", label:"Inscripción de pilotos", visible:true},
+      {key:"sponsors", label:"Sponsors", visible:true},
+      {key:"redes", label:"Redes sociales", visible:true}
+    ],
     nav_brand_short: "KPS",
     nav_brand_long: "Karting Provincial Santafesino",
     footer_about: "Karting Provincial Santafesino. Competencia oficial de karting en asfalto — Santa Fe, Argentina.",
@@ -120,15 +132,15 @@ function defaultData(){
       {orden:"08", nombre:"125cc 2T Internacional", descripcion:"La categoría reina del campeonato — máxima potencia y el nivel más competitivo de KPS.", etiqueta:"Elite"}
     ],
     calendario: [
-      {numero:"1ª FECHA", fechas:"25 y 26 de abril", estado:"Corrida", nota:"Apertura de temporada.", fotos:""},
-      {numero:"2ª FECHA", fechas:"23 y 24 de mayo", estado:"Corrida", nota:"", fotos:""},
-      {numero:"3ª FECHA", fechas:"20 y 21 de junio", estado:"Corrida", nota:"", fotos:""},
-      {numero:"4ª FECHA", fechas:"18 y 19 de julio", estado:"Corrida", nota:"", fotos:""},
-      {numero:"5ª FECHA", fechas:"22 y 23 de agosto", estado:"Corrida", nota:"", fotos:""},
-      {numero:"6ª FECHA", fechas:"19 y 20 de septiembre", estado:"Próxima", nota:"Cierre de la fase regular — definición de copas.", fotos:""},
-      {numero:"7ª FECHA", fechas:"17 y 18 de octubre", estado:"A disputarse", nota:"Sorteo de la Rifa Solidaria KPS.", fotos:""},
-      {numero:"8ª FECHA", fechas:"21 y 22 de noviembre", estado:"A disputarse", nota:"", fotos:""},
-      {numero:"9ª FECHA", fechas:"A definir", estado:"A definir", nota:"Fecha de cierre de temporada.", fotos:""}
+      {numero:"1ª FECHA", fechas:"25 y 26 de abril", estado:"Corrida", nota:"Apertura de temporada.", fotos:"", carpeta_drive:""},
+      {numero:"2ª FECHA", fechas:"23 y 24 de mayo", estado:"Corrida", nota:"", fotos:"", carpeta_drive:""},
+      {numero:"3ª FECHA", fechas:"20 y 21 de junio", estado:"Corrida", nota:"", fotos:"", carpeta_drive:""},
+      {numero:"4ª FECHA", fechas:"18 y 19 de julio", estado:"Corrida", nota:"", fotos:"", carpeta_drive:""},
+      {numero:"5ª FECHA", fechas:"22 y 23 de agosto", estado:"Corrida", nota:"", fotos:"", carpeta_drive:""},
+      {numero:"6ª FECHA", fechas:"19 y 20 de septiembre", estado:"Próxima", nota:"Cierre de la fase regular — definición de copas.", fotos:"", carpeta_drive:""},
+      {numero:"7ª FECHA", fechas:"17 y 18 de octubre", estado:"A disputarse", nota:"Sorteo de la Rifa Solidaria KPS.", fotos:"", carpeta_drive:""},
+      {numero:"8ª FECHA", fechas:"21 y 22 de noviembre", estado:"A disputarse", nota:"", fotos:"", carpeta_drive:""},
+      {numero:"9ª FECHA", fechas:"A definir", estado:"A definir", nota:"Fecha de cierre de temporada.", fotos:"", carpeta_drive:""}
     ],
     puntuaciones: [
       {categoria:"125cc 2T Internacional", posicion:"1", piloto:"Franco Belliboni", numero_kart:"12", puntos:"198"},
@@ -226,6 +238,7 @@ function renderLogin(){
 
 /* ============ SHELL Y TABS ============ */
 const TABS = [
+  {key:"bloques", label:"Bloques"},
   {key:"logo", label:"Logo"},
   {key:"general", label:"General"},
   {key:"redes", label:"Redes y contacto"},
@@ -261,6 +274,26 @@ function renderShell(inner){
       ${state.tab==="inscripciones_recibidas" ? "" : `<button class="btn btn-red" id="saveBtn" ${state.saving?"disabled":""}>${state.saving ? "Guardando…" : "Guardar cambios"}</button>`}
     </div>
   </div>`;
+}
+
+/* ============ TAB: BLOQUES ============ */
+function renderBloquesTab(){
+  const blocks = state.data.blocks;
+  const rows = blocks.map((b, i) => `
+    <div class="card" style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 20px;">
+      <label style="display:flex;align-items:center;gap:12px;font-family:var(--font-display);font-weight:700;font-size:1rem;">
+        <input type="checkbox" data-block-visible="${i}" ${b.visible !== false ? "checked" : ""} style="width:18px;height:18px;">
+        ${esc(b.label)}
+      </label>
+      <div style="display:flex;gap:6px;">
+        <button class="btn" data-block-up="${i}" ${i===0?"disabled":""} title="Subir">↑</button>
+        <button class="btn" data-block-down="${i}" ${i===blocks.length-1?"disabled":""} title="Bajar">↓</button>
+      </div>
+    </div>`).join("");
+  return `
+    <h2 class="section-title">Bloques de la página</h2>
+    <p class="section-sub">Destildá un bloque para ocultarlo del sitio (por ejemplo mientras lo estás preparando), y usá las flechas para cambiar el orden en que aparecen. El encabezado y el pie de página no se mueven, son fijos.</p>
+    ${rows}`;
 }
 
 /* ============ TAB: LOGO ============ */
@@ -326,13 +359,17 @@ function renderCalendarioTab(){
       </div>
       <div class="field"><label>Nota (opcional)</label><input data-f="calendario:${i}:nota" value="${esc(c.nota)}"></div>
       <div class="field">
-        <label>Fotos de esta fecha (opcional) — pegá los links de Google Drive, uno por línea</label>
+        <label>Fotos para el loop (opcional) — pegá 3 o 4 links de imagen de Google Drive, uno por línea</label>
         <textarea data-f="calendario:${i}:fotos" placeholder="https://drive.google.com/uc?export=view&id=...">${esc(c.fotos)}</textarea>
+      </div>
+      <div class="field">
+        <label>Carpeta de Drive con todas las fotos (opcional) — al hacer clic en el loop, te lleva acá para descargar la que quieras</label>
+        <input data-f="calendario:${i}:carpeta_drive" value="${esc(c.carpeta_drive)}" placeholder="https://drive.google.com/drive/folders/...">
       </div>
     </div>`).join("");
   return `
     <h2 class="section-title">Calendario</h2>
-    <p class="section-sub">El punto de la línea de tiempo cambia de color según el estado que elijas. Para las fotos, subilas a Google Drive, "Cualquier usuario con el enlace", y armá el link como <span class="mono">https://drive.google.com/uc?export=view&amp;id=TU_CODIGO</span> (mismo truco que usamos para el logo).</p>
+    <p class="section-sub">El punto de la línea de tiempo cambia de color según el estado que elijas. Para las fotos, subilas a una carpeta de Google Drive, compartila como "Cualquier usuario con el enlace", y para cada foto del loop armá el link como <span class="mono">https://drive.google.com/uc?export=view&amp;id=TU_CODIGO</span> (mismo truco que usamos para el logo). El link de la carpeta es simplemente la URL que te da Drive al compartir la carpeta completa.</p>
     ${cards}
     <button class="add-btn" data-add="calendario">+ Agregar fecha</button>`;
 }
@@ -556,6 +593,7 @@ function renderReglamentoTab(){
 
 /* ============ RENDER PRINCIPAL ============ */
 function renderTabContent(){
+  if(state.tab==="bloques") return renderBloquesTab();
   if(state.tab==="logo") return renderLogoTab();
   if(state.tab==="general") return renderGeneralTab();
   if(state.tab==="redes") return renderRedesTab();
@@ -622,6 +660,28 @@ function attachShellEvents(){
     btn.addEventListener("click", () => setInscripcionStatus(btn.dataset.rejectInsc, "rechazado"));
   });
 
+  document.querySelectorAll("[data-block-visible]").forEach(el => {
+    el.addEventListener("change", () => {
+      state.data.blocks[Number(el.dataset.blockVisible)].visible = el.checked;
+    });
+  });
+  document.querySelectorAll("[data-block-up]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.dataset.blockUp);
+      const arr = state.data.blocks;
+      [arr[i-1], arr[i]] = [arr[i], arr[i-1]];
+      render();
+    });
+  });
+  document.querySelectorAll("[data-block-down]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const i = Number(btn.dataset.blockDown);
+      const arr = state.data.blocks;
+      [arr[i+1], arr[i]] = [arr[i], arr[i+1]];
+      render();
+    });
+  });
+
   document.querySelectorAll("[data-f-top]").forEach(el => {
     el.addEventListener("input", () => { state.data[el.dataset.fTop] = el.value; });
   });
@@ -645,7 +705,7 @@ function attachShellEvents(){
       const coll = btn.dataset.add;
       const blanks = {
         categorias: {orden:"", nombre:"", descripcion:"", etiqueta:""},
-        calendario: {numero:"", fechas:"", estado:"A definir", nota:"", fotos:""},
+        calendario: {numero:"", fechas:"", estado:"A definir", nota:"", fotos:"", carpeta_drive:""},
         sponsors: {nombre:"", logo_url:"", link:"", activo:true},
         inscripcion_campos: {orden:String(state.data.inscripcion_campos.length+1), etiqueta:"", tipo:"texto", opciones:"", requerido:false}
       };
