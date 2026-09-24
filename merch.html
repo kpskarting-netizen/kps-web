@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tienda KPS — Merch</title>
+<meta name="description" content="Comprá remeras, camperas y gorras oficiales de Karting Provincial Santafesino.">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Work+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{
+  --asphalt:#15171C; --red:#C81E2C; --blue:#1C5FA8; --chrome:#E7E9EC;
+  --paper:#F3F2EE; --paper-2:#EAE8E1; --ink:#15171C; --ink-soft:#4B4E55; --white:#FFFFFF;
+  --font-display:'Rajdhani',sans-serif; --font-body:'Work Sans',sans-serif; --font-mono:'JetBrains Mono',monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);}
+h1,h2,h3{font-family:var(--font-display);font-weight:700;margin:0;}
+.mono{font-family:var(--font-mono);}
+a{color:inherit;}
+.wrap{max-width:900px;margin:0 auto;padding:0 20px 70px;}
+header{background:var(--asphalt);padding:18px 20px;margin-bottom:40px;}
+header .inner{max-width:900px;margin:0 auto;display:flex;align-items:center;gap:10px;}
+header a{text-decoration:none;color:var(--white);font-family:var(--font-display);font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:10px;}
+header .badge{background:#fff;border-radius:6px;padding:4px 6px;display:flex;}
+header .badge img{height:26px;width:auto;display:block;}
+h1{font-size:1.9rem;margin-bottom:8px;}
+.lead{color:var(--ink-soft);margin-bottom:34px;max-width:60ch;}
+
+.catalog{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px;margin-bottom:50px;}
+.prod-card{background:var(--white);border:1px solid var(--paper-2);cursor:pointer;transition:border-color .15s ease;}
+.prod-card:hover{border-color:var(--red);}
+.prod-card.selected{border-color:var(--red);border-width:2px;}
+.prod-card .ph{aspect-ratio:4/3;overflow:hidden;background:var(--paper-2);}
+.prod-card .ph img{width:100%;height:100%;object-fit:cover;display:block;}
+.prod-card .info{padding:14px 16px;}
+.prod-card h4{font-size:1rem;line-height:1.2;}
+.prod-card .price{font-family:var(--font-mono);font-weight:700;color:var(--red);margin-top:6px;}
+
+.card{background:var(--white);border:1px solid var(--paper-2);padding:30px;}
+.field{margin-bottom:18px;}
+.field label{display:block;font-family:var(--font-mono);font-size:.72rem;color:var(--ink-soft);margin-bottom:6px;letter-spacing:.3px;}
+.field input,.field select{
+  width:100%;padding:11px 13px;border:1.5px solid #C9C7BE;background:var(--paper);
+  font-family:var(--font-body);font-size:.95rem;color:var(--ink);
+}
+.field input:focus,.field select:focus{border-color:var(--blue);outline:none;background:var(--white);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+@media(max-width:560px){.row2{grid-template-columns:1fr;}}
+
+.selected-preview{display:flex;gap:16px;align-items:center;margin-bottom:20px;padding:14px;background:var(--paper);border:1px solid var(--paper-2);}
+.selected-preview img{width:70px;height:70px;object-fit:cover;flex:none;}
+.selected-preview .name{font-family:var(--font-display);font-weight:700;}
+.selected-preview .price{font-family:var(--font-mono);color:var(--red);margin-top:2px;}
+
+.pay-box{background:var(--asphalt);color:#fff;padding:22px 24px;margin:6px 0 22px;}
+.pay-box .kicker{font-family:var(--font-mono);font-size:.75rem;color:#ff8b93;}
+.pay-box p{color:#C7C9CE;font-size:.9rem;margin:6px 0 0;}
+.alias-box{font-family:var(--font-mono);font-size:1.3rem;font-weight:700;margin:12px 0;background:rgba(255,255,255,.1);padding:10px 14px;text-align:center;}
+.pay-box label.check{display:flex;gap:10px;align-items:flex-start;font-size:.88rem;color:#C7C9CE;margin-top:12px;}
+.pay-box label.check input{margin-top:3px;}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-display);font-weight:700;font-size:1rem;padding:14px 26px;border:none;cursor:pointer;text-decoration:none;width:100%;}
+.btn-red{background:var(--red);color:#fff;}
+.btn-red:disabled{opacity:.6;cursor:not-allowed;}
+.form-note{font-size:.82rem;color:var(--ink-soft);margin-top:16px;}
+.confirm-box{display:none;background:#EAF3EA;border:1.5px solid #2f7a3a;padding:18px 20px;margin-top:18px;color:#1f5426;font-weight:600;}
+.confirm-box.show{display:block;}
+.confirm-box.error{background:#fde8e7;border-color:var(--red);color:#8a1410;}
+footer{text-align:center;padding:30px 20px;color:var(--ink-soft);font-size:.82rem;}
+.empty-note{color:var(--ink-soft);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <a href="index.html">
+      <span class="badge"><img id="headerLogo" src="" alt="Logo de KPS" style="display:none;"></span>
+      KPS · Karting Provincial Santafesino
+    </a>
+  </div>
+</header>
+
+<div class="wrap">
+  <h1>Tienda oficial KPS</h1>
+  <p class="lead">Remeras, camperas y gorros de la colección oficial. Elegí el artículo, el color y el talle, pagá por transferencia y subí el comprobante. Tu pedido queda <strong>sujeto a confirmación del organizador</strong>.</p>
+
+  <div class="catalog" id="catalog"><p class="empty-note">Cargando catálogo…</p></div>
+
+  <form class="card" id="merchForm" style="display:none;">
+    <div class="selected-preview" id="selectedPreview"></div>
+
+    <div class="field">
+      <label for="m-producto">Artículo</label>
+      <select id="m-producto" required></select>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="m-color">Color</label><select id="m-color" required></select></div>
+      <div class="field"><label for="m-talle">Talle</label><select id="m-talle" required></select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label for="m-nombre">Nombre y apellido</label><input id="m-nombre" required></div>
+      <div class="field"><label for="m-telefono">Teléfono / WhatsApp</label><input id="m-telefono" type="tel" required></div>
+    </div>
+    <div class="field"><label for="m-email">E-mail</label><input id="m-email" type="email" required></div>
+
+    <div class="pay-box">
+      <span class="kicker">Cómo pagar</span>
+      <p>Transferí el monto del artículo a este alias de Mercado Pago:</p>
+      <div class="alias-box mono" id="merchAlias">Kps2026</div>
+      <div class="field">
+        <label style="color:#C7C9CE;">Número de comprobante / referencia</label>
+        <input id="m-payref" placeholder="Ej: N° de operación 000123456" required>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="m-payconfirm" required>
+        Confirmo que ya realicé la transferencia por el monto del artículo elegido.
+      </label>
+    </div>
+
+    <button type="submit" class="btn btn-red">Enviar pedido</button>
+    <div class="confirm-box" id="merchConfirm"></div>
+    <p class="form-note">El pedido queda pendiente hasta que el organizador confirme el pago. Coordinamos la entrega por WhatsApp o e-mail.</p>
+  </form>
+</div>
+
+<footer>Karting Provincial Santafesino — <a href="index.html">Volver al sitio</a></footer>
+
+<script>
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAplAcQP22J8naIE7SFUTOCfxjH4OLdp-E",
+  authDomain: "gran-rifa-kps.firebaseapp.com",
+  projectId: "gran-rifa-kps",
+  storageBucket: "gran-rifa-kps.firebasestorage.app",
+  messagingSenderId: "343696537914",
+  appId: "1:343696537914:web:5d84dd0e455a532b227803"
+};
+let _db = null;
+function getDb(){
+  if(_db) return _db;
+  if(!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+  _db = firebase.firestore();
+  return _db;
+}
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+let productos = [];
+
+function renderCatalog(){
+  const cat = document.getElementById('catalog');
+  if(!productos.length){
+    cat.innerHTML = '<p class="empty-note">Todavía no hay artículos cargados. Volvé a pasar más tarde.</p>';
+    return;
+  }
+  cat.innerHTML = productos.map((p, i) => `
+    <div class="prod-card" data-select-prod="${i}">
+      <div class="ph"><img src="${esc(p.imagen)}" alt="${esc(p.nombre)}"></div>
+      <div class="info">
+        <h4>${esc(p.nombre)}</h4>
+        <div class="price">${esc(p.precio)}</div>
+      </div>
+    </div>`).join('');
+  document.querySelectorAll('[data-select-prod]').forEach(card => {
+    card.addEventListener('click', () => selectProduct(Number(card.dataset.selectProd), true));
+  });
+}
+
+function populateSelect(el, values){
+  el.innerHTML = values.map(v => `<option>${esc(v)}</option>`).join('');
+}
+
+function selectProduct(idx, scroll){
+  const p = productos[idx];
+  if(!p) return;
+  document.querySelectorAll('.prod-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`[data-select-prod="${idx}"]`)?.classList.add('selected');
+
+  document.getElementById('m-producto').value = p.nombre;
+  populateSelect(document.getElementById('m-color'), p.colores.split('|').map(s=>s.trim()).filter(Boolean));
+  populateSelect(document.getElementById('m-talle'), p.talles.split('|').map(s=>s.trim()).filter(Boolean));
+
+  document.getElementById('selectedPreview').innerHTML = `
+    <img src="${esc(p.imagen)}" alt="${esc(p.nombre)}">
+    <div><div class="name">${esc(p.nombre)}</div><div class="price">${esc(p.precio)}</div></div>`;
+
+  const form = document.getElementById('merchForm');
+  form.style.display = 'block';
+  if(scroll) form.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+async function loadContent(){
+  try{
+    const doc = await getDb().collection("settings").doc("site_content").get();
+    const site = doc.exists ? (doc.data() || {}) : {};
+
+    if(site.header_logo){
+      const img = document.getElementById('headerLogo');
+      img.src = site.header_logo;
+      img.style.display = 'block';
+    }
+    if(site.alias_mp){
+      document.getElementById('merchAlias').textContent = site.alias_mp;
+    }
+
+    productos = Array.isArray(site.merch_productos) ? site.merch_productos.filter(p => p.activo && p.imagen) : [];
+    renderCatalog();
+
+    const sel = document.getElementById('m-producto');
+    sel.innerHTML = productos.map(p => `<option>${esc(p.nombre)}</option>`).join('');
+    sel.addEventListener('change', () => {
+      const idx = productos.findIndex(p => p.nombre === sel.value);
+      if(idx >= 0) selectProduct(idx, false);
+    });
+
+    if(productos.length) selectProduct(0, false);
+  }catch(err){
+    console.error("No se pudo cargar la tienda.", err);
+    document.getElementById('catalog').innerHTML = '<p class="empty-note">No se pudo cargar el catálogo. Probá de nuevo en unos minutos.</p>';
+  }
+}
+loadContent();
+
+function genId(){
+  return 'MERCH-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,6).toUpperCase();
+}
+
+document.getElementById('merchForm').addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const box = document.getElementById('merchConfirm');
+  box.classList.remove('error');
+  const submitBtn = ev.target.querySelector('button[type="submit"]');
+
+  const payRef = document.getElementById('m-payref').value.trim();
+  const payConfirmed = document.getElementById('m-payconfirm').checked;
+  if(!payRef || !payConfirmed){
+    box.textContent = 'Completá el número de comprobante y confirmá que ya transferiste el pago.';
+    box.classList.add('show','error');
+    return;
+  }
+
+  const registro = {
+    id: genId(),
+    producto: document.getElementById('m-producto').value,
+    color: document.getElementById('m-color').value,
+    talle: document.getElementById('m-talle').value,
+    nombre: document.getElementById('m-nombre').value.trim(),
+    telefono: document.getElementById('m-telefono').value.trim(),
+    email: document.getElementById('m-email').value.trim(),
+    payReference: payRef,
+    payConfirmed: true,
+    status: 'pendiente',
+    createdAt: Date.now()
+  };
+
+  try{
+    submitBtn.disabled = true; submitBtn.textContent = 'Enviando…';
+    await getDb().collection('pedidos_merch').doc(registro.id).set(registro);
+    box.textContent = '¡Listo! Tu pedido quedó registrado como pendiente. Te contactamos por WhatsApp o e-mail para coordinar la entrega apenas confirmemos el pago.';
+    box.classList.remove('error');
+    box.classList.add('show');
+    ev.target.reset();
+  }catch(err){
+    console.error('No se pudo guardar el pedido.', err);
+    box.textContent = 'Hubo un problema al enviar el pedido. Probá de nuevo o escribinos directo por WhatsApp.';
+    box.classList.add('show','error');
+  }finally{
+    submitBtn.disabled = false; submitBtn.textContent = 'Enviar pedido';
+  }
+});
+</script>
+</body>
+</html>
