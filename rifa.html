@@ -45,11 +45,14 @@
   .slide.active{opacity:1; transform:translateX(0); pointer-events:auto; position:relative;}
   .slide-bg{position:absolute; inset:0; z-index:0;}
   .slide-inner{position:relative; z-index:2; width:100%; max-width:1100px; margin:0 auto; padding:38px 28px 46px; display:flex; gap:28px; align-items:flex-start; flex-wrap:wrap;}
+  .badges-row{display:flex; flex-direction:column; gap:10px; flex-shrink:0;}
   .brand-badge{
     background:var(--kps-white); border-radius:8px; padding:10px 14px 6px;
     box-shadow:var(--shadow); flex-shrink:0;
   }
   .brand-badge img{display:block; height:52px; width:auto;}
+  .brand-badge.sponsor-badge{padding:8px 12px;}
+  .brand-badge.sponsor-badge img{height:38px; max-width:120px; object-fit:contain;}
   .slide-copy{flex:1; min-width:240px;}
   .slide-photo{width:150px; flex-shrink:0; background:#fff; border-radius:8px; padding:5px; box-shadow:var(--shadow); align-self:flex-start;}
   .slide-photo img{width:100%; height:120px; object-fit:cover; border-radius:5px; display:block;}
@@ -540,11 +543,15 @@ function renderHeader(){
         ${s.prizes.map((p,idx)=>`<li><span class="tag">P${idx+1}</span>${esc(p)}</li>`).join("")}
       </ul>` : "";
     const photoHtml = s.imageDataUrl ? `<div class="slide-photo"><img src="${s.imageDataUrl}" alt="Premio ${esc(s.title)}"></div>` : "";
+    const sponsorLogoHtml = s.logoDataUrl ? `<div class="brand-badge sponsor-badge"><img src="${s.logoDataUrl}" alt="Logo del premio"></div>` : "";
     return `
     <div class="slide ${i===state.slideIndex?"active":""}" data-slide="${i}">
       <div class="slide-bg" style="background:${s.bg}"></div>
       <div class="slide-inner">
-        <div class="brand-badge"><img src="${LOGO_SRC}" alt="Logo KPS"></div>
+        <div class="badges-row">
+          <div class="brand-badge"><img src="${LOGO_SRC}" alt="Logo KPS"></div>
+          ${sponsorLogoHtml}
+        </div>
         <div class="slide-copy">
           <span class="slide-eyebrow" style="background:${s.eyebrowBg}; color:${s.key==='december'?'#1a1200':'#fff'}">${esc(s.eyebrow)}</span>
           <h1>${esc(s.title)}</h1>
@@ -913,12 +920,20 @@ function renderContentEditor(){
         <label style="color:#ccc;">Aclaración (qué números juegan)</label>
         <textarea data-slide-field="${i}:note" rows="2" style="width:100%; font-family:'Inter',sans-serif; border:1.5px solid #444; border-radius:6px; padding:10px 12px; font-size:14px; background:#fff;">${esc(s.note||"")}</textarea>
       </div>
-      <div class="field">
+      <div class="field" style="margin-bottom:12px;">
         <label style="color:#ccc;">Foto del premio (opcional)</label>
         <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
           ${s.imageDataUrl ? `<img src="${s.imageDataUrl}" alt="Vista previa" style="width:100px; height:80px; object-fit:cover; border-radius:6px; border:2px solid #444;">` : `<span style="color:#888; font-size:13px;">Sin foto cargada</span>`}
           <input type="file" accept="image/*" data-slide-photo="${i}" style="color:#ccc;">
           ${s.imageDataUrl ? `<button class="btn small secondary" data-slide-photo-clear="${i}">Quitar foto</button>` : ""}
+        </div>
+      </div>
+      <div class="field">
+        <label style="color:#ccc;">Logo del premio / sponsor que lo dona (opcional)</label>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          ${s.logoDataUrl ? `<img src="${s.logoDataUrl}" alt="Vista previa del logo" style="width:90px; height:60px; object-fit:contain; border-radius:6px; border:2px solid #444; background:#fff; padding:4px;">` : `<span style="color:#888; font-size:13px;">Sin logo cargado — se muestra solo el logo de KPS</span>`}
+          <input type="file" accept="image/*" data-slide-logo="${i}" style="color:#ccc;">
+          ${s.logoDataUrl ? `<button class="btn small secondary" data-slide-logo-clear="${i}">Quitar logo</button>` : ""}
         </div>
       </div>
     </div>`).join("");
@@ -1045,15 +1060,44 @@ function exportOrdersCsv(){
 }
 
 /* =========================================================
+   PRESERVAR FOCO/CURSOR EN INPUTS AL RE-RENDERIZAR
+   (evita que haya que volver a hacer click en el campo
+   cada vez que el usuario escribe algo)
+========================================================= */
+function captureFocus(){
+  const el = document.activeElement;
+  if(!el || !el.id) return null;
+  const info = { id: el.id };
+  if(typeof el.selectionStart === "number"){
+    info.selStart = el.selectionStart;
+    info.selEnd = el.selectionEnd;
+  }
+  return info;
+}
+function restoreFocus(info){
+  if(!info) return;
+  const el = document.getElementById(info.id);
+  if(!el) return;
+  el.focus();
+  if(typeof info.selStart === "number" && el.setSelectionRange){
+    try{ el.setSelectionRange(info.selStart, info.selEnd); }catch(e){}
+  }
+}
+
+/* =========================================================
    MAIN RENDER
 ========================================================= */
+let lastHeaderSignature = null;
+
 function render(){
   const app = document.getElementById("app");
+  const focusInfo = captureFocus();
 
   if(location.hash === "#/admin"){
     app.innerHTML = state.admin.loggedIn ? renderAdminPanel() : renderAdminLogin();
     document.getElementById("closeBanner")?.addEventListener("click", ()=>{ state.banner=null; render(); });
     attachAdminEvents();
+    restoreFocus(focusInfo);
     return;
   }
 
@@ -1062,8 +1106,28 @@ function render(){
     return;
   }
 
-  app.innerHTML = `
-    ${renderHeader()}
+  // El header/carrusel vive en su propio contenedor persistente y solo se
+  // vuelve a dibujar cuando cambia el contenido de las placas (no en cada
+  // tecla que el usuario escribe en un campo), así nunca "salta" ni pierde
+  // el foco mientras se completa un formulario.
+  let headerSlot = document.getElementById("kpsHeaderSlot");
+  let bodySlot = document.getElementById("kpsBodySlot");
+  if(!headerSlot || !bodySlot || !app.contains(headerSlot)){
+    app.innerHTML = `<div id="kpsHeaderSlot"></div><div id="kpsBodySlot"></div>`;
+    headerSlot = document.getElementById("kpsHeaderSlot");
+    bodySlot = document.getElementById("kpsBodySlot");
+    lastHeaderSignature = null;
+  }
+
+  const headerSignature = JSON.stringify(effectiveSlides());
+  if(headerSignature !== lastHeaderSignature){
+    headerSlot.innerHTML = renderHeader();
+    lastHeaderSignature = headerSignature;
+    updateSlideDOM();
+    attachCarouselEvents();
+  }
+
+  bodySlot.innerHTML = `
     <div class="wrap" style="padding-top:${(state.banner||state.apiError)?"18px":"0"};">
       ${!apiConfigured() ? `<div class="banner info"><span>⚙️ Este sitio todavía no está conectado a la base de datos. Completá <strong>CONFIG.firebase</strong> en el archivo con los datos de tu proyecto de Firebase para que las compras se guarden de verdad.</span></div>` : ""}
       ${state.apiError && apiConfigured() ? `<div class="banner error"><span>No se pudo conectar con la base de datos: ${esc(state.apiError)}</span></div>` : ""}
@@ -1075,7 +1139,7 @@ function render(){
   `;
   document.getElementById("closeBanner")?.addEventListener("click", ()=>{ state.banner=null; render(); });
   attachFlowEvents();
-  attachCarouselEvents();
+  restoreFocus(focusInfo);
 }
 
 /* =========================================================
@@ -1292,6 +1356,27 @@ function attachAdminEvents(){
     btn.addEventListener("click", ()=>{
       const idx = Number(btn.dataset.slidePhotoClear);
       delete state.admin.slideDrafts[idx].imageDataUrl;
+      render();
+    });
+  });
+  document.querySelectorAll("[data-slide-logo]").forEach(el=>{
+    el.addEventListener("change", async (e)=>{
+      const idx = Number(e.target.dataset.slideLogo);
+      const file = e.target.files && e.target.files[0];
+      if(!file) return;
+      try{
+        const dataUrl = await compressImageFile(file, 300);
+        state.admin.slideDrafts[idx].logoDataUrl = dataUrl;
+        render();
+      }catch(err){
+        showBanner("error", "No se pudo procesar el logo: " + err.message);
+      }
+    });
+  });
+  document.querySelectorAll("[data-slide-logo-clear]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const idx = Number(btn.dataset.slideLogoClear);
+      delete state.admin.slideDrafts[idx].logoDataUrl;
       render();
     });
   });
